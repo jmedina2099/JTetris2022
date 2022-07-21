@@ -14,32 +14,32 @@ function App() {
       case "Enter":
         if( !running ) {
           axios
-          .get<boolean>( "http://13.52.252.10:8080/start" )
+          .get<boolean>( "http://localhost:8080/start" )
           .then( response => {
             setRunning(response.data);
           });
         } else {
           axios
-          .get<boolean>( "http://13.52.252.10:8080/pause" )
+          .get<boolean>( "http://localhost:8080/pause" )
           .then( response => {
             setPaused(response.data);
           });
         }
         break;
       case "Space":
-        axios.get<boolean>( "http://13.52.252.10:8080/space" );
+        axios.get<boolean>( "http://localhost:8080/space" );
         break;
       case "ArrowLeft":
-        axios.get<boolean>( "http://13.52.252.10:8080/left" );
+        axios.get<boolean>( "http://localhost:8080/left" );
         break;
       case "ArrowRight":
-        axios.get<boolean>( "http://13.52.252.10:8080/right" );
+        axios.get<boolean>( "http://localhost:8080/right" );
         break;
       case "ArrowUp":
-        axios.get<boolean>( "http://13.52.252.10:8080/up" );
+        axios.get<boolean>( "http://localhost:8080/up" );
         break
       case "ArrowDown":
-        axios.get<boolean>( "http://13.52.252.10:8080/down" );
+        axios.get<boolean>( "http://localhost:8080/down" );
         break
     }
   }
