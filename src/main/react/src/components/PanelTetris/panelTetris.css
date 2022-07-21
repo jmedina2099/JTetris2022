@@ -1,0 +1,7 @@
+.panelTetris {
+    position: relative;
+    border: 1px solid white;
+    width: 200px;
+    height: 400px;
+    background-color: black;
+  }
