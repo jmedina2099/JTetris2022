@@ -18,7 +18,7 @@ const VentanaPrincipal: FC<PropsTetris> = ( { running,paused } : PropsTetris ) =
     if( running && !paused ) {
       const idInterval : NodeJS.Timer = setInterval(() => {
         axios
-        .get<Caja[]>( "http://localhost:8080/figures" )
+        .get<Caja[]>( "http://13.52.252.10:8080/figures" )
         .then( response => {
           setBoxes(response.data);
         });
