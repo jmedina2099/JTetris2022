@@ -18,7 +18,7 @@ import jtetris.figure.Figure;
  *
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://13.52.252.10:3000")
 public class TetrisController {
 	
 	@Autowired
