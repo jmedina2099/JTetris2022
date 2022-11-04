@@ -1,8 +1,9 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Box, { Caja } from '../Box/Box';
 import PanelTetris from '../PanelTetris/PanelTetris';
 
 import "./ventanaPrincipal.css";
+import SERVERNAME from '../../servername.json'
 
 import axios from 'axios';
 
@@ -18,16 +19,22 @@ const VentanaPrincipal: FC<PropsTetris> = ( { running,paused } : PropsTetris ) =
     if( running && !paused ) {
       const idInterval : NodeJS.Timer = setInterval(() => {
         axios
-        .get<Caja[]>( "http://13.52.252.10:8080/figures" )
+        .get<Caja[]>( SERVERNAME.address+"/figures" )
         .then( response => {
           setBoxes(response.data);
         });
       }, 500);
       setMyInterval(idInterval);
     } else {
-      clearInterval(myInterval);
+      //clearInterval(myInterval);
     }
   }, [running,paused]);
+
+  if( running && !paused ) {
+  } else {
+    clearInterval(myInterval);
+  }
+
   return (
     <div className='ventanaPrincipal'>
       <PanelTetris>

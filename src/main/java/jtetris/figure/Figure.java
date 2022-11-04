@@ -44,8 +44,8 @@ public abstract class Figure implements Cloneable {
 	
 	public boolean hit( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listBoxes.stream().forEach( x -> {
-			boxesFalling.stream().forEach( b -> {
+		this.listBoxes.forEach( x -> {
+			boxesFalling.forEach( b -> {
 				if( x.hit(b) ) {
 					chokaVar[0] = true;
 				}
@@ -56,8 +56,8 @@ public abstract class Figure implements Cloneable {
 	
 	public boolean hitDown( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listBoxes.stream().forEach( x -> {
-			boxesFalling.stream().forEach( b -> {
+		this.listBoxes.forEach( x -> {
+			boxesFalling.forEach( b -> {
 				if( x.hitDown(b) ) {
 					chokaVar[0] = true;
 				}
@@ -68,8 +68,8 @@ public abstract class Figure implements Cloneable {
 	
 	public boolean hitRight( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listBoxes.stream().forEach( x -> {
-			boxesFalling.stream().forEach( b -> {
+		this.listBoxes.forEach( x -> {
+			boxesFalling.forEach( b -> {
 				if( x.hitRight(b) ) {
 					chokaVar[0] = true;
 				}
@@ -80,8 +80,8 @@ public abstract class Figure implements Cloneable {
 	
 	public boolean hitLeft( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listBoxes.stream().forEach( x -> {
-			boxesFalling.stream().forEach( b -> {
+		this.listBoxes.forEach( x -> {
+			boxesFalling.forEach( b -> {
 				if( x.hitLeft(b) ) {
 					chokaVar[0] = true;
 				}
@@ -143,44 +143,34 @@ public abstract class Figure implements Cloneable {
 	}
 	
 	public void moveUp() {
-		this.listBoxes.stream().forEach( x -> {
-			x.coord.y -= Box.SIZE;
-		});
+		this.listBoxes.forEach( x -> x.coord.y -= Box.SIZE );
 		this.center.y -= Box.SIZE;
 	}
 	
 	public void moveDown() {
-		this.listBoxes.stream().forEach( x -> {
-			x.coord.y += Box.SIZE;
-		});
+		this.listBoxes.forEach( x -> x.coord.y += Box.SIZE );
 		this.center.y += Box.SIZE;
 	}
 	
 	public void moveRight() {
-		this.listBoxes.stream().forEach( x -> {
-			x.coord.x += Box.SIZE;
-		});
+		this.listBoxes.forEach( x -> x.coord.x += Box.SIZE );
 		this.center.x += Box.SIZE;
 	}
 
 	public void moveLeft() {
-		this.listBoxes.stream().forEach( x -> {
-			x.coord.x -= Box.SIZE;
-		});
+		this.listBoxes.forEach( x -> x.coord.x -= Box.SIZE );
 		this.center.x -= Box.SIZE;
 	}
 
 	private Punto[] getBoxCoords( Punto[] src ) {
 		int[] index = { 0 };
-		this.listBoxes.stream().forEach( x -> {
-			src[index[0]++] = x.coord;
-		});
+		this.listBoxes.forEach( x -> src[index[0]++] = x.coord );
 		return src;
 	}
 	
 	public double getXMin() {
 		double leftCorner[] = { 200d };
-		this.listBoxes.stream().forEach( x -> {
+		this.listBoxes.forEach( x -> {
 			if( x.coord.x < leftCorner[0] ) {
 				leftCorner[0] = x.coord.x;
 			}
@@ -190,7 +180,7 @@ public abstract class Figure implements Cloneable {
 	
 	public double getXMax() {
 		double rightCorner[] = { 0d };
-		this.listBoxes.stream().forEach( x -> {
+		this.listBoxes.forEach( x -> {
 			if( rightCorner[0] < x.coord.x ) {
 				rightCorner[0] = x.coord.x;
 			}
@@ -200,7 +190,7 @@ public abstract class Figure implements Cloneable {
 	
 	public double getYMin() {
 		double topCorner[] = { 400d };
-		this.listBoxes.stream().forEach( x -> {
+		this.listBoxes.forEach( x -> {
 			if( x.coord.y < topCorner[0] ) {
 				topCorner[0] = x.coord.y;
 			}
@@ -210,7 +200,7 @@ public abstract class Figure implements Cloneable {
 
 	public double getYMax() {
 		double bottomCorner[] = { 0d };
-		this.listBoxes.stream().forEach( x -> {
+		this.listBoxes.forEach( x -> {
 			if( bottomCorner[0] < x.coord.y ) {
 				bottomCorner[0] = x.coord.y;
 			}
@@ -219,7 +209,7 @@ public abstract class Figure implements Cloneable {
 	}	
 	
 	public void paint( Graphics2D g2 ) {
-		this.listBoxes.stream().forEach( x -> doPaint(x::paint,g2) );
+		this.listBoxes.forEach( x -> doPaint(x::paint,g2) );
 	}
 	
 	private interface PaintWithGraphics2D {

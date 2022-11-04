@@ -70,7 +70,7 @@ public class TetrisController {
 			boxes.addAll( this.engine.fallingFigure.listBoxes );
 		}
 		if( this.engine.listFigures.size() > 0 ) {
-			this.engine.listFigures.stream().forEach( x -> {
+			this.engine.listFigures.forEach( x -> {
 				boxes.addAll( x.listBoxes );
 			});
 		}

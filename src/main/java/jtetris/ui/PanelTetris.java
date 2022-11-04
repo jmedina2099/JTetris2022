@@ -51,7 +51,7 @@ public class PanelTetris extends JPanel {
 			if( this.engine.fallingFigure != null ) {
 				this.engine.fallingFigure.paint(g2);
 			}
-			this.engine.listFigures.stream().forEach( x -> doPaint(x::paint, g2) );
+			this.engine.listFigures.forEach( x -> doPaint(x::paint, g2) );
 		} else {
 			String message = "PAUSED";
 			if( this.engine.gameOver ) {

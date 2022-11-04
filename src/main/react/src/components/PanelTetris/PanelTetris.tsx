@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import Box from '../Box/Box';
 
 import "./panelTetris.css";
 

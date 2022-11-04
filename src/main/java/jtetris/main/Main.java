@@ -1,5 +1,7 @@
 package jtetris.main;
 
+import javax.swing.SwingUtilities;
+
 import jtetris.ui.VentanaPrincipal;
 
 /**
@@ -17,10 +19,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+		Runnable uiTarget = () -> createAndShowGUI();
+        SwingUtilities.invokeLater(uiTarget);
 	}
 }

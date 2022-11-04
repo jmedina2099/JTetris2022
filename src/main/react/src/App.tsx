@@ -1,8 +1,8 @@
 import React, { useState, useEffect, KeyboardEvent, useRef } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
+import SERVERNAME from './servername.json'
 
 import axios from 'axios';
 
@@ -14,32 +14,32 @@ function App() {
       case "Enter":
         if( !running ) {
           axios
-          .get<boolean>( "http://13.52.252.10:8080/start" )
+          .get<boolean>( SERVERNAME.address+"/start" )
           .then( response => {
             setRunning(response.data);
           });
         } else {
           axios
-          .get<boolean>( "http://13.52.252.10:8080/pause" )
+          .get<boolean>( SERVERNAME.address+"/pause" )
           .then( response => {
             setPaused(response.data);
           });
         }
         break;
       case "Space":
-        axios.get<boolean>( "http://13.52.252.10:8080/space" );
+        axios.get<boolean>( SERVERNAME.address+"/space" );
         break;
       case "ArrowLeft":
-        axios.get<boolean>( "http://13.52.252.10:8080/left" );
+        axios.get<boolean>( SERVERNAME.address+"/left" );
         break;
       case "ArrowRight":
-        axios.get<boolean>( "http://13.52.252.10:8080/right" );
+        axios.get<boolean>( SERVERNAME.address+"/right" );
         break;
       case "ArrowUp":
-        axios.get<boolean>( "http://13.52.252.10:8080/up" );
+        axios.get<boolean>( SERVERNAME.address+"/up" );
         break
       case "ArrowDown":
-        axios.get<boolean>( "http://13.52.252.10:8080/down" );
+        axios.get<boolean>( SERVERNAME.address+"/down" );
         break
     }
   }

@@ -138,13 +138,13 @@ public class Engine implements Runnable {
 		for( int i=yMax; yMin<=i; ) {
 			List<Box> boxes = new ArrayList<Box>(); 
 			int[] j = { i };
-			this.listFigures.stream().forEach( x -> {
+			this.listFigures.forEach( x -> {
 				boxes.addAll( x.getBoxesWithY( j[0] ) );
 			});
 			if( boxes.size() == 10 ) {
-				boxes.stream().forEach( x -> x.clearBox() );
-				this.listFigures.stream().forEach( x -> {
-					x.listBoxes.stream().forEach( b -> {
+				boxes.forEach( x -> x.clearBox() );
+				this.listFigures.forEach( x -> {
+					x.listBoxes.forEach( b -> {
 						if( b.coord.y < j[0] ) {
 							b.coord.y += Box.SIZE;
 						}
@@ -197,7 +197,7 @@ public class Engine implements Runnable {
 
 	private boolean hit( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listFigures.stream().forEach( x -> {
+		this.listFigures.forEach( x -> {
 			if( x.hit(boxesFalling) ) {
 				chokaVar[0] = true;
 			}
@@ -207,7 +207,7 @@ public class Engine implements Runnable {
 
 	private boolean hitDown( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listFigures.stream().forEach( x -> {
+		this.listFigures.forEach( x -> {
 			if( x.hitDown(boxesFalling) ) {
 				chokaVar[0] = true;
 			}
@@ -217,7 +217,7 @@ public class Engine implements Runnable {
 	
 	private boolean hitRight( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listFigures.stream().forEach( x -> {
+		this.listFigures.forEach( x -> {
 			if( x.hitRight(boxesFalling) ) {
 				chokaVar[0] = true;
 			}
@@ -227,7 +227,7 @@ public class Engine implements Runnable {
 
 	private boolean hitLeft( ArrayList<Box> boxesFalling ) {
 		boolean chokaVar[] = { false };
-		this.listFigures.stream().forEach( x -> {
+		this.listFigures.forEach( x -> {
 			if( x.hitLeft(boxesFalling) ) {
 				chokaVar[0] = true;
 			}
