@@ -65,8 +65,12 @@ public class TetrisController {
 
 	@GetMapping("/figures")
 	public ResponseEntity<ArrayList<Box>> getFigures() {
+		if( !this.engine.isRunning() ) {
+			return null;
+		}
+		
 		ArrayList<Box> boxes = new ArrayList<Box>();
-		if( this.engine.fallingFigure != null ) {
+		if( this.engine.fallingFigure != null && this.engine.isInside(this.engine.fallingFigure) ) {
 			boxes.addAll( this.engine.fallingFigure.listBoxes );
 		}
 		if( this.engine.listFigures.size() > 0 ) {

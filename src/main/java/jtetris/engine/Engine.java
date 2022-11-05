@@ -33,6 +33,14 @@ public class Engine implements Runnable {
 	public Engine() {
 		this.figureFactory = new FigureFactory(this);
 	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}	
 
 	public void setPanelTetris(PanelTetris panelTetris) {
 		this.panelTetris = panelTetris;
@@ -236,12 +244,15 @@ public class Engine implements Runnable {
 	}	
 
 	
-	private boolean isInside(Figure figureCopy) {
+	public boolean isInside(Figure figureCopy) {
 		if( figureCopy.getXMin() < 0 ) {
 			figureCopy.moveRight();
 			return isInsideOnly( figureCopy );
 		} else if( 200 < figureCopy.getXMax()+Box.SIZE ) {
 			figureCopy.moveLeft();
+			return isInsideOnly( figureCopy );
+		} else if( figureCopy.getYMin() < 0 ) {
+			figureCopy.moveDown();
 			return isInsideOnly( figureCopy );
 		} else if( 400d < figureCopy.getYMax()+Box.SIZE ) {
 			figureCopy.moveUp();
@@ -252,6 +263,7 @@ public class Engine implements Runnable {
 	
 	private boolean isInsideOnly( Figure figure ) {
 		return ( 0 <= figure.getXMin() &&
+				0 <= figure.getYMin() &&
 				figure.getXMax()+Box.SIZE <= 200 &&
 				figure.getYMax()+Box.SIZE <= 400d );
 	}

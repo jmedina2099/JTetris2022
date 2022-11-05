@@ -23,7 +23,7 @@ public class VentanaPrincipal
 	private Engine engine;
 
 	public VentanaPrincipal() {
-		super( "JTetris v 2022" );
+		super( "JTetris v.2022" );
 		init();
 	}
 

@@ -7,7 +7,7 @@ type PropsTetris = {
 }
 
 const PanelTetris: FC<PropsTetris> = ( {children} : PropsTetris ) => (
-  <div className='panelTetris'>
+  <div className="panelTetris">
     {children}
   </div>
 );

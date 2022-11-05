@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import "./box.css";
 
@@ -8,8 +8,12 @@ export interface Caja {
   color: string;
 }
 
-const Box: FC<Caja> = ( {x,y,color} : Caja ) =>  (
-  <div className='box' style={{top: y, left: x, backgroundColor: color }}></div>
+type BoxProps = {
+  caja: Caja;  
+}
+
+const Box = ( {caja} : BoxProps ) =>  (
+  <div className="box" style={{top: caja.y, left: caja.x, backgroundColor: caja.color }}></div>
 );
 
 export default Box;

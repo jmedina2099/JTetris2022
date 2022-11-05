@@ -6,6 +6,11 @@ import SERVERNAME from './servername.json'
 
 import axios from 'axios';
 
+export interface State {
+  running: boolean,
+  paused: boolean
+}
+
 function App() {
   const [running, setRunning] = useState<boolean>(false);
   const [paused, setPaused] = useState<boolean>(false);
@@ -16,13 +21,23 @@ function App() {
           axios
           .get<boolean>( SERVERNAME.address+"/start" )
           .then( response => {
-            setRunning(response.data);
+            if( response && typeof response.data === "boolean" ) {
+              setRunning(response.data);
+            }
+          })
+          .catch( (error) => {
+            setRunning(false);
           });
         } else {
           axios
           .get<boolean>( SERVERNAME.address+"/pause" )
           .then( response => {
-            setPaused(response.data);
+            if( response && typeof response.data === "boolean" ) {
+              setPaused(response.data);
+            }
+          })
+          .catch( (error) => {
+            setRunning(false);
           });
         }
         break;
@@ -49,7 +64,7 @@ function App() {
    }, [focusDiv]);
   return (
     <div className="App" onKeyDown={handleKeyboard} tabIndex={0} ref={focusDiv}>
-      <VentanaPrincipal running={running} paused={paused}/>
+      <VentanaPrincipal state={{running,paused}}/>
     </div>
   );
 }
