@@ -261,7 +261,7 @@ public class Engine implements Runnable {
 		return true;
 	}
 	
-	private boolean isInsideOnly( Figure figure ) {
+	public boolean isInsideOnly( Figure figure ) {
 		return ( 0 <= figure.getXMin() &&
 				0 <= figure.getYMin() &&
 				figure.getXMax()+Box.SIZE <= 200 &&

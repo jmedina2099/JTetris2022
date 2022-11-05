@@ -70,7 +70,7 @@ public class TetrisController {
 		}
 		
 		ArrayList<Box> boxes = new ArrayList<Box>();
-		if( this.engine.fallingFigure != null && this.engine.isInside(this.engine.fallingFigure) ) {
+		if( this.engine.fallingFigure != null && this.engine.isInsideOnly(this.engine.fallingFigure) ) {
 			boxes.addAll( this.engine.fallingFigure.listBoxes );
 		}
 		if( this.engine.listFigures.size() > 0 ) {
