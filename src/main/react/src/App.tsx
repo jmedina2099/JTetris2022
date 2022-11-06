@@ -1,60 +1,46 @@
-import React, { useState, useEffect, KeyboardEvent, useRef } from 'react';
-import './App.css';
-
+import React, { useState, useEffect, createContext, KeyboardEvent, useRef } from 'react';
+import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
-import SERVERNAME from './servername.json'
+import ApiService from './service/ApiService';
 
-import axios from 'axios';
+import './App.css';
 
 export interface State {
   running: boolean,
   paused: boolean
 }
 
+const ApiServiceImpl = new ApiService();
+export const ApiServiceContext = createContext(ApiServiceImpl);
+
 function App() {
   const [running, setRunning] = useState<boolean>(false);
   const [paused, setPaused] = useState<boolean>(false);
+  const [cajas,setCajas] = useState<Caja[]>([]);
+  const [cajasCayendo,setCajasCayendo] = useState<Caja[]>([]);
   const handleKeyboard = (e: KeyboardEvent): void => {
     switch (e.code) {
       case "Enter":
         if( !running ) {
-          axios
-          .get<boolean>( SERVERNAME.address+"/start" )
-          .then( response => {
-            if( response && typeof response.data === "boolean" ) {
-              setRunning(response.data);
-            }
-          })
-          .catch( (error) => {
-            setRunning(false);
-          });
+          ApiServiceImpl.start(setRunning);
         } else {
-          axios
-          .get<boolean>( SERVERNAME.address+"/pause" )
-          .then( response => {
-            if( response && typeof response.data === "boolean" ) {
-              setPaused(response.data);
-            }
-          })
-          .catch( (error) => {
-            setRunning(false);
-          });
+          ApiServiceImpl.pause(setPaused,setRunning);
         }
         break;
       case "Space":
-        axios.get<boolean>( SERVERNAME.address+"/space" );
+        ApiServiceImpl.space(setCajasCayendo);
         break;
       case "ArrowLeft":
-        axios.get<boolean>( SERVERNAME.address+"/left" );
+        ApiServiceImpl.left(setCajasCayendo);
         break;
       case "ArrowRight":
-        axios.get<boolean>( SERVERNAME.address+"/right" );
+        ApiServiceImpl.right(setCajasCayendo);
         break;
       case "ArrowUp":
-        axios.get<boolean>( SERVERNAME.address+"/up" );
+        ApiServiceImpl.up(setCajasCayendo);
         break
       case "ArrowDown":
-        axios.get<boolean>( SERVERNAME.address+"/down" );
+        ApiServiceImpl.down(setCajasCayendo);
         break
     }
   }
@@ -63,9 +49,11 @@ function App() {
     if(focusDiv.current) focusDiv.current.focus(); 
    }, [focusDiv]);
   return (
-    <div className="App" onKeyDown={handleKeyboard} tabIndex={0} ref={focusDiv}>
-      <VentanaPrincipal state={{running,paused}}/>
-    </div>
+      <div className="App" onKeyDown={handleKeyboard} tabIndex={0} ref={focusDiv}>
+        <VentanaPrincipal state={{running,paused}}
+          cajas={cajas} setCajas={setCajas}
+          cajasCayendo={cajasCayendo} setCajasCayendo={setCajasCayendo}/>
+      </div>
   );
 }
 

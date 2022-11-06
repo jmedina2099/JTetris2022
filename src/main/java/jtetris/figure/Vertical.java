@@ -19,10 +19,11 @@ public class Vertical extends Figure {
 	}
 
 	private void init( Engine engine ) {
-		super.listBoxes.add( new Box(engine,this,0,0) );
-		super.listBoxes.add( new Box(engine,this,Box.SIZE,0) );
-		super.listBoxes.add( new Box(engine,this,2*Box.SIZE,0) );
-		super.listBoxes.add( new Box(engine,this,3*Box.SIZE,0) );
-		super.center.setLocation( Box.SIZE, 0 );
+		double centerX = 3*Box.SIZE;
+		super.listBoxes.add( new Box(engine,this,centerX,0) );
+		super.listBoxes.add( new Box(engine,this,centerX+Box.SIZE,0) );
+		super.listBoxes.add( new Box(engine,this,centerX+2*Box.SIZE,0) );
+		super.listBoxes.add( new Box(engine,this,centerX+3*Box.SIZE,0) );
+		super.center.setLocation( centerX+Box.SIZE, 0 );
 	}
 }

@@ -20,10 +20,11 @@ public class Te extends Figure {
 	}
 
 	private void init( Engine engine ) {
-		super.listBoxes.add( new Box(engine,this,0,Box.SIZE) );
-		super.listBoxes.add( new Box(engine,this,Box.SIZE,Box.SIZE) );
-		super.listBoxes.add( new Box(engine,this,Box.SIZE,0) );
-		super.listBoxes.add( new Box(engine,this,2*Box.SIZE,Box.SIZE) );
-		super.center.setLocation( Box.SIZE, Box.SIZE );
+		double centerX = 3*Box.SIZE;
+		super.listBoxes.add( new Box(engine,this,centerX,Box.SIZE) );
+		super.listBoxes.add( new Box(engine,this,centerX+Box.SIZE,Box.SIZE) );
+		super.listBoxes.add( new Box(engine,this,centerX+Box.SIZE,0) );
+		super.listBoxes.add( new Box(engine,this,centerX+2*Box.SIZE,Box.SIZE) );
+		super.center.setLocation( centerX+Box.SIZE, Box.SIZE );
 	}
 }

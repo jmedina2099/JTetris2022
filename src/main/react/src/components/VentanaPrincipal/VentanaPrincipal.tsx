@@ -1,49 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Box, { Caja } from '../Box/Box';
 import PanelTetris from '../PanelTetris/PanelTetris';
 
 import "./ventanaPrincipal.css";
-import SERVERNAME from '../../servername.json'
 
-import axios from 'axios';
 import { State } from '../../App';
 
+import { ApiServiceContext } from '../../App'
+
 type PropsTetris = {
+  cajas: Caja[],
+  setCajas: Function,
+  cajasCayendo: Caja[],
+  setCajasCayendo: Function,
   state: State,
 };
 
-const VentanaPrincipal = ( { state } : PropsTetris ) => {
-  const [boxes, setBoxes] = useState<Caja[]>([]);
-  const [myInterval,setMyInterval] = useState<NodeJS.Timer>();
+const VentanaPrincipal = ( { cajas, setCajas, cajasCayendo, setCajasCayendo, state } : PropsTetris ) => {
+  const ApiServiceImpl = useContext(ApiServiceContext);
+  const [myInterval1,setMyInterval1] = useState<NodeJS.Timer>();
+  const [myInterval2,setMyInterval2] = useState<NodeJS.Timer>();
   useEffect(() => {
     if( state.running && !state.paused ) {
-      const idInterval : NodeJS.Timer = setInterval(() => {
-        axios
-        .get<Caja[]>( SERVERNAME.address+"/figures" )
-        .then( response => {
-          if( response && response.data ) {
-            setBoxes(response.data);
-          } else {
-            clearInterval(idInterval);
-          }
-        })
-        .catch( (error) => {
-          clearInterval(idInterval);
-          setBoxes([]);
-        });
-      }, 500);
-      setMyInterval(idInterval);
+      ApiServiceImpl.fetchFallingFigure(setCajasCayendo,setMyInterval2);
+      ApiServiceImpl.fetchFigures(setCajas,setMyInterval1);
     }
-  }, [state.running,state.paused]);
+  }, [state.running,state.paused,ApiServiceImpl,setCajas,setCajasCayendo]);
   if( !state.running || state.paused ) {
-    if( myInterval ) {
-      clearInterval(myInterval);
+    if( myInterval1 ) {
+      clearInterval(myInterval1);
+    }
+    if( myInterval2 ) {
+      clearInterval(myInterval2);
     }
   }
   return (
     <div className="ventanaPrincipal">
       <PanelTetris>
-        {boxes.map( box => {
+        {cajasCayendo.map( box => {
+          return <Box key={box.x+"-"+box.y} caja={box}/>;
+        })}
+        {cajas.map( box => {
           return <Box key={box.x+"-"+box.y} caja={box}/>;
         })}
       </PanelTetris>

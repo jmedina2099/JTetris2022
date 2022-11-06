@@ -39,30 +39,35 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/right")
-	public boolean right() {
-		return this.engine.moveRight();
+	public ResponseEntity<ArrayList<Box>> right() {
+		this.engine.moveRight();
+		return getFallingFigure();
 	}	
 
 	@GetMapping("/left")
-	public boolean left() {
-		return this.engine.moveLeft();
+	public ResponseEntity<ArrayList<Box>> left() {
+		this.engine.moveLeft();
+		return getFallingFigure();
 	}
 	
 	@GetMapping("/up")
-	public void up() {
-		this.engine.rotate(Figure.RIGHT_ROTATION); 
+	public ResponseEntity<ArrayList<Box>> up() {
+		this.engine.rotate(Figure.RIGHT_ROTATION);
+		return getFallingFigure();
 	}	
 
 	@GetMapping("/down")
-	public void down() {
+	public ResponseEntity<ArrayList<Box>> down() {
 		this.engine.rotate(Figure.LEFT_ROTATION);
+		return getFallingFigure();
 	}
 	
 	@GetMapping("/space")
-	public void space() {
+	public ResponseEntity<ArrayList<Box>> space() {
 		while( this.engine.moveDown() );
-	}	
-
+		return getFallingFigure();
+	}
+	
 	@GetMapping("/figures")
 	public ResponseEntity<ArrayList<Box>> getFigures() {
 		if( !this.engine.isRunning() ) {
@@ -70,9 +75,6 @@ public class TetrisController {
 		}
 		
 		ArrayList<Box> boxes = new ArrayList<Box>();
-		if( this.engine.fallingFigure != null && this.engine.isInsideOnly(this.engine.fallingFigure) ) {
-			boxes.addAll( this.engine.fallingFigure.listBoxes );
-		}
 		if( this.engine.listFigures.size() > 0 ) {
 			this.engine.listFigures.forEach( x -> {
 				boxes.addAll( x.listBoxes );
@@ -80,4 +82,18 @@ public class TetrisController {
 		}
 		return new ResponseEntity<ArrayList<Box>>(boxes, HttpStatus.OK);
 	}
+	
+	@GetMapping("/fallingFigure")
+	public ResponseEntity<ArrayList<Box>> getFallingFigure() {
+		if( !this.engine.isRunning() ) {
+			return null;
+		}
+
+		ArrayList<Box> boxes = new ArrayList<Box>();
+		if( this.engine.fallingFigure != null && this.engine.isInsideOnly(this.engine.fallingFigure) ) {
+			boxes.addAll( this.engine.fallingFigure.listBoxes );
+		}
+		return new ResponseEntity<ArrayList<Box>>(boxes, HttpStatus.OK);
+	}
+
 }

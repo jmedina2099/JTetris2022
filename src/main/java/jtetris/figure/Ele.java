@@ -20,10 +20,11 @@ public class Ele extends Figure {
 	}
 
 	private void init( Engine engine ) {
-		super.listBoxes.add( new Box(engine,this,0,0) );
-		super.listBoxes.add( new Box(engine,this,0,Box.SIZE) );
-		super.listBoxes.add( new Box(engine,this,0,2*Box.SIZE) );
-		super.listBoxes.add( new Box(engine,this,Box.SIZE,2*Box.SIZE) );
-		super.center.setLocation( Box.SIZE, Box.SIZE );
+		double centerX = 4*Box.SIZE;
+		super.listBoxes.add( new Box(engine,this,centerX,0) );
+		super.listBoxes.add( new Box(engine,this,centerX,Box.SIZE) );
+		super.listBoxes.add( new Box(engine,this,centerX,2*Box.SIZE) );
+		super.listBoxes.add( new Box(engine,this,centerX+Box.SIZE,2*Box.SIZE) );
+		super.center.setLocation( centerX+Box.SIZE, Box.SIZE );
 	}
 }
