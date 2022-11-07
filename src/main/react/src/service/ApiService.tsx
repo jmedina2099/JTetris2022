@@ -13,7 +13,7 @@ export class ApiService {
       const idInterval : NodeJS.Timer[] = [];
       this.getFigures(setBoxes,idInterval);
       idInterval[0] = setInterval(() => this.getFigures(setBoxes,idInterval), this.timeoutFetch);
-      setMyInterval(idInterval);
+      setMyInterval(idInterval[0]);
     }
 
     getFigures( setBoxes : Function, idInterval : NodeJS.Timer[] ) {
@@ -23,12 +23,12 @@ export class ApiService {
         if( response && response.data && Array.isArray(response.data) ) {
           setBoxes(response.data);
         } else {
-          clearInterval(idInterval[0]);
+          if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxes([]);
         }
       })
       .catch( (error) => {
-        clearInterval(idInterval[0]);
+        if( idInterval[0] ) clearInterval(idInterval[0]);
       });
     }
 
@@ -36,7 +36,7 @@ export class ApiService {
       const idInterval : NodeJS.Timer[] = [];
       this.getFallingFigure(setBoxesFalling,idInterval);
       idInterval[0] = setInterval(() => this.getFallingFigure(setBoxesFalling,idInterval), this.timeoutFetch);
-      setMyInterval(idInterval);
+      setMyInterval(idInterval[0]);
     }
 
     getFallingFigure( setBoxesFalling : Function, idInterval : NodeJS.Timer[] ) {
@@ -46,12 +46,12 @@ export class ApiService {
         if( response && response.data && Array.isArray(response.data) ) {
           setBoxesFalling(response.data);
         } else {
-          clearInterval(idInterval[0]);
+          if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxesFalling([]);
         }
       })
       .catch( (error) => {
-        clearInterval(idInterval[0]);
+        if( idInterval[0] ) clearInterval(idInterval[0]);
       });
     }
 
