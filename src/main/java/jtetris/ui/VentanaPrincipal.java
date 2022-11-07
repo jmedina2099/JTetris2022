@@ -19,8 +19,9 @@ public class VentanaPrincipal
 
 	private static final long serialVersionUID = -7645083003060705096L;
 
+	protected Engine engine;
 	protected PanelTetris panelTetris;
-	private Engine engine;
+	protected PanelLateral panelLateral;
 
 	public VentanaPrincipal() {
 		super( "JTetris v.2022" );
@@ -34,7 +35,9 @@ public class VentanaPrincipal
 		
 		this.engine = new Engine();
 		this.panelTetris = new PanelTetris(this.engine);
+		this.panelLateral = new PanelLateral();
 		this.engine.setPanelTetris( this.panelTetris );
+		this.engine.setPanelScore( this.panelLateral.panelScore );
 
 		initContentPane();
 		addKeyListener( new Listener(this.engine) );
@@ -49,6 +52,7 @@ public class VentanaPrincipal
 		panel.add( Box.createHorizontalStrut(100));
 		panel.add( this.panelTetris );
 		panel.add( Box.createHorizontalStrut(100));
+		panel.add( this.panelLateral );
 		panel.add( Box.createHorizontalGlue() );
 		
 		setContentPane( panel );

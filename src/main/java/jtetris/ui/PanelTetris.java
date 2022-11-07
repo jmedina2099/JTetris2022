@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -54,21 +52,17 @@ public class PanelTetris extends JPanel {
 			this.engine.listFigures.forEach( x -> doPaint(x::paint, g2) );
 		} else {
 			String message = "PAUSED";
+			float x = 38;
+			float y = 182;
 			if( this.engine.gameOver ) {
 				message = "GAME OVER";
+				x = 5.5f;
+				y = 182f;
 				System.out.println( "GAME OVER" );
 			}
 			
 			g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON );
 			g2.setFont( fontTxt );
-
-			FontRenderContext frc = new FontRenderContext(new AffineTransform(),true,true);     
-			int textwidth = (int)(fontTxt.getStringBounds(message, frc).getWidth());
-			int textheight = (int)(fontTxt.getStringBounds(message, frc).getHeight());
-			
-			float x = (200-textwidth)/2f;
-			float y = (400-textheight)/2f;
-			
 			g2.setColor( Color.WHITE );
 			g2.drawString( message, x, y);
 		}

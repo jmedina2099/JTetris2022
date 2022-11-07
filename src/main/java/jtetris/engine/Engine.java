@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import jtetris.figure.Box;
 import jtetris.figure.Figure;
 import jtetris.figure.FigureFactory;
+import jtetris.ui.PanelScore;
 import jtetris.ui.PanelTetris;
 
 /**
@@ -19,6 +20,7 @@ public class Engine implements Runnable {
 	
 	protected FigureFactory figureFactory;
 	private PanelTetris panelTetris;
+	private PanelScore panelScore;
 	
 	public boolean running = false;
 	
@@ -44,6 +46,10 @@ public class Engine implements Runnable {
 
 	public void setPanelTetris(PanelTetris panelTetris) {
 		this.panelTetris = panelTetris;
+	}
+	
+	public void setPanelScore(PanelScore panelScore) {
+		this.panelScore = panelScore;
 	}
 
 	public void doStart() {
@@ -137,10 +143,14 @@ public class Engine implements Runnable {
 
 	private void fixAndClear() {
 		this.listFigures.add( this.fallingFigure );
-		clearLines( this.fallingFigure );
+		int score = clearLines( this.fallingFigure );
+		if( this.panelScore != null ) this.panelScore.addScore(score);
 	}
 
-	private void clearLines( Figure figure ) {
+	private int clearLines( Figure figure ) {
+		int score = 0;
+		int lineasWipe = 0;
+		
 		int yMin = (int)figure.getYMin();
 		int yMax = (int)figure.getYMax();
 		for( int i=yMax; yMin<=i; ) {
@@ -149,8 +159,10 @@ public class Engine implements Runnable {
 			this.listFigures.forEach( x -> {
 				boxes.addAll( x.getBoxesWithY( j[0] ) );
 			});
-			if( boxes.size() == 10 ) {
+			if( boxes.size() == 10 ) { // line clear!
 				boxes.forEach( x -> x.clearBox() );
+				score += 10;
+				lineasWipe++;
 				this.listFigures.forEach( x -> {
 					x.listBoxes.forEach( b -> {
 						if( b.coord.y < j[0] ) {
@@ -163,6 +175,8 @@ public class Engine implements Runnable {
 				i -= Box.SIZE;
 			}
 		}
+		
+		return score+(lineasWipe*5);
 	}	
 
 	@Override
