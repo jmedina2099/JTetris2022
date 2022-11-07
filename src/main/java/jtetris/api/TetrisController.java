@@ -28,14 +28,22 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/start")
-	public boolean start() {
+	public ResponseEntity<Boolean> start() {
+		if( this.engine.running ) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
+		
 		this.engine.doStart();
-		return true;
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
 	@GetMapping("/pause")
-	public boolean pause() {
-		return this.engine.togglePause();
+	public ResponseEntity<Boolean> pause() {
+		if( !this.engine.running ) {
+			return null;
+		}
+		
+		return new ResponseEntity<Boolean>(this.engine.togglePause(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/right")

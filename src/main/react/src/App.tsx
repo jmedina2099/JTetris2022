@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, KeyboardEvent, useRef } from 'react';
+import React, { useState, useEffect, createContext, useContext, KeyboardEvent, useRef, Dispatch } from 'react';
 import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
 import ApiService from './service/ApiService';
@@ -10,37 +10,54 @@ export interface State {
   paused: boolean
 }
 
+export interface Game {
+  apiService: ApiService,
+  running: [boolean,Dispatch<React.SetStateAction<boolean>>],
+  paused: [boolean,Dispatch<React.SetStateAction<boolean>>],
+  cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>],
+  cajasCayendo: [Caja[],Dispatch<React.SetStateAction<Caja[]>>],
+}
+
 const ApiServiceImpl = new ApiService();
-export const ApiServiceContext = createContext(ApiServiceImpl);
+export const ApiServiceContext = createContext<Game>(
+  {
+    apiService: ApiServiceImpl,
+    running: [false, () => {} ],
+    paused: [false, () => {} ],
+    cajas: [[], () => {}],
+    cajasCayendo: [[], () => {}],
+  }
+);
 
 function App() {
-  const [running, setRunning] = useState<boolean>(false);
-  const [paused, setPaused] = useState<boolean>(false);
-  const [cajas,setCajas] = useState<Caja[]>([]);
-  const [cajasCayendo,setCajasCayendo] = useState<Caja[]>([]);
+  const context = useContext(ApiServiceContext);
+  context.running = useState<boolean>(false);
+  context.paused = useState<boolean>(false);
+  context.cajas = useState<Caja[]>([]);
+  context.cajasCayendo = useState<Caja[]>([]);
   const handleKeyboard = (e: KeyboardEvent): void => {
     switch (e.code) {
       case "Enter":
-        if( !running ) {
-          ApiServiceImpl.start(setRunning);
+        if( !context.running[0] ) {
+          ApiServiceImpl.start(context.running[1],context.paused[1]);
         } else {
-          ApiServiceImpl.pause(setPaused,setRunning);
+          ApiServiceImpl.pause(context.paused[1],context.running[1]);
         }
         break;
       case "Space":
-        ApiServiceImpl.space(setCajasCayendo);
+        ApiServiceImpl.space(context.cajasCayendo[1]);
         break;
       case "ArrowLeft":
-        ApiServiceImpl.left(setCajasCayendo);
+        ApiServiceImpl.left(context.cajasCayendo[1]);
         break;
       case "ArrowRight":
-        ApiServiceImpl.right(setCajasCayendo);
+        ApiServiceImpl.right(context.cajasCayendo[1]);
         break;
       case "ArrowUp":
-        ApiServiceImpl.up(setCajasCayendo);
+        ApiServiceImpl.up(context.cajasCayendo[1]);
         break
       case "ArrowDown":
-        ApiServiceImpl.down(setCajasCayendo);
+        ApiServiceImpl.down(context.cajasCayendo[1]);
         break
     }
   }
@@ -50,9 +67,7 @@ function App() {
    }, [focusDiv]);
   return (
       <div className="App" onKeyDown={handleKeyboard} tabIndex={0} ref={focusDiv}>
-        <VentanaPrincipal state={{running,paused}}
-          cajas={cajas} setCajas={setCajas}
-          cajasCayendo={cajasCayendo} setCajasCayendo={setCajasCayendo}/>
+        <VentanaPrincipal/>
       </div>
   );
 }

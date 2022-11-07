@@ -24,6 +24,7 @@ export class ApiService {
           setBoxes(response.data);
         } else {
           clearInterval(idInterval[0]);
+          setBoxes([]);
         }
       })
       .catch( (error) => {
@@ -46,6 +47,7 @@ export class ApiService {
           setBoxesFalling(response.data);
         } else {
           clearInterval(idInterval[0]);
+          setBoxesFalling([]);
         }
       })
       .catch( (error) => {
@@ -53,15 +55,25 @@ export class ApiService {
       });
     }
 
-    start( setRunning : Function ) {
+    start( setRunning : Function, setPaused : Function ) {
       axios
       .get<boolean>( SERVERNAME.address+"/start" )
       .then( response => {
         if( response && typeof response.data === "boolean" ) {
-          setRunning(response.data);
+          if( response.data ) {
+            setRunning(response.data);
+          } else {
+            setRunning(true);
+            this.pause(setPaused,setRunning);
+          }
+        } else {
+          setRunning(false);
+          setPaused(false);
         }
       })
       .catch( (error) => {
+        setRunning(false);
+        setPaused(false);
       });
     }
 
@@ -71,10 +83,14 @@ export class ApiService {
       .then( response => {
         if( response && typeof response.data === "boolean" ) {
           setPaused(response.data);
+        } else {
+          setRunning(false);
+          this.start(setRunning,setPaused);
         }
       })
       .catch( (error) => {
         setRunning(false);
+        setPaused(false);
       });
     }
 

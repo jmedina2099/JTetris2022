@@ -64,6 +64,10 @@ public class Engine implements Runnable {
 	}
 
 	public boolean togglePause() {
+		if( this.gameOver ) {
+			return false;
+		}
+		
 		this.isPaused  = !this.isPaused;
 		if( !this.isPaused && this.b != null ) {
 			this.thread.notify();
