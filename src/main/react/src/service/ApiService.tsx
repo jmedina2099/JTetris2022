@@ -1,52 +1,47 @@
-import { Caja } from '../components/Box/Box';
-
 import SERVERNAME from '../servername.json'
 
 import axios from 'axios';
+import { Board, Game } from '../App';
 
 export class ApiService {
 
     getInterval : Function = () => undefined;
     timeoutFetch : number = 1000;
 
-    fetchFigures( setBoxes : Function, setMyInterval : Function ) {
+    fetchBoard( context : Game ) {
       const idInterval : NodeJS.Timer[] = [];
-      this.getFigures(setBoxes,idInterval);
-      idInterval[0] = setInterval(() => this.getFigures(setBoxes,idInterval), this.timeoutFetch);
-      setMyInterval(idInterval[0]);
+      this.getBoard(context,idInterval);
+      idInterval[0] = setInterval(() => this.getBoard(context,idInterval), this.timeoutFetch);
+      context.intervalFetch[1]( idInterval[0] );
     }
 
-    getFigures( setBoxes : Function, idInterval : NodeJS.Timer[] ) {
+    getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
+      const setBoxes = context.cajas[1];
+      const setBoxesFalling = context.cajasCayendo[1];
+      const running = context.running;
+      const paused = context.paused;
       axios
-      .get<Caja[]>( SERVERNAME.address+"/figures" )
+      .get<Board>( SERVERNAME.address+"/board" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) ) {
-          setBoxes(response.data);
+        if( response && response.data ) {
+          const board = response.data;
+          if( running[0] !== board.running ) {
+            running[1]( board.running );
+          }
+          if( paused[0] !== board.paused ) {
+            paused[1]( board.paused );
+          }
+          if( board.running && !board.paused ) {
+            setBoxes(board.figuresFixed);
+            setBoxesFalling(board.fallingFigure);
+          } else {
+            if( idInterval[0] ) clearInterval(idInterval[0]);
+            setBoxes([]);
+            setBoxesFalling([]);
+          }
         } else {
           if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxes([]);
-        }
-      })
-      .catch( (error) => {
-        if( idInterval[0] ) clearInterval(idInterval[0]);
-      });
-    }
-
-    fetchFallingFigure( setBoxesFalling : Function, setMyInterval : Function ) {
-      const idInterval : NodeJS.Timer[] = [];
-      this.getFallingFigure(setBoxesFalling,idInterval);
-      idInterval[0] = setInterval(() => this.getFallingFigure(setBoxesFalling,idInterval), this.timeoutFetch);
-      setMyInterval(idInterval[0]);
-    }
-
-    getFallingFigure( setBoxesFalling : Function, idInterval : NodeJS.Timer[] ) {
-      axios
-      .get<Caja[]>( SERVERNAME.address+"/fallingFigure" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data) ) {
-          setBoxesFalling(response.data);
-        } else {
-          if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxesFalling([]);
         }
       })
@@ -62,9 +57,6 @@ export class ApiService {
         if( response && typeof response.data === "boolean" ) {
           if( response.data ) {
             setRunning(response.data);
-          } else {
-            setRunning(true);
-            this.pause(setPaused,setRunning);
           }
         } else {
           setRunning(false);
@@ -83,9 +75,6 @@ export class ApiService {
       .then( response => {
         if( response && typeof response.data === "boolean" ) {
           setPaused(response.data);
-        } else {
-          setRunning(false);
-          this.start(setRunning,setPaused);
         }
       })
       .catch( (error) => {

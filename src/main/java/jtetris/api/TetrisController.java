@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jtetris.api.model.Board;
 import jtetris.engine.Engine;
 import jtetris.figure.Box;
 import jtetris.figure.Figure;
@@ -49,50 +50,64 @@ public class TetrisController {
 	@GetMapping("/right")
 	public ResponseEntity<ArrayList<Box>> right() {
 		this.engine.moveRight();
-		return getFallingFigure();
+		return new ResponseEntity<ArrayList<Box>>(getFallingFigure(), HttpStatus.OK);
 	}	
 
 	@GetMapping("/left")
 	public ResponseEntity<ArrayList<Box>> left() {
 		this.engine.moveLeft();
-		return getFallingFigure();
+		return new ResponseEntity<ArrayList<Box>>(getFallingFigure(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/up")
 	public ResponseEntity<ArrayList<Box>> up() {
 		this.engine.rotate(Figure.RIGHT_ROTATION);
-		return getFallingFigure();
+		return new ResponseEntity<ArrayList<Box>>(getFallingFigure(), HttpStatus.OK);
 	}	
 
 	@GetMapping("/down")
 	public ResponseEntity<ArrayList<Box>> down() {
 		this.engine.rotate(Figure.LEFT_ROTATION);
-		return getFallingFigure();
+		return new ResponseEntity<ArrayList<Box>>(getFallingFigure(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/space")
 	public ResponseEntity<ArrayList<Box>> space() {
 		while( this.engine.moveDown() );
-		return getFallingFigure();
+		return new ResponseEntity<ArrayList<Box>>(getFallingFigure(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/figures")
-	public ResponseEntity<ArrayList<Box>> getFigures() {
+	@GetMapping("/board")
+	public ResponseEntity<Board> getBoard() {
+		Board board = new Board();
+		board.setRunning( this.engine.isRunning() );
+		board.setPaused( this.engine.isPaused() );
+		board.setFiguresFixed( getFigures() );
+		board.setFallingFigure( getFallingFigure() );
+		return new ResponseEntity<Board>(board, HttpStatus.OK);
+	}
+	
+	private ArrayList<Box> getFigures() {
 		if( !this.engine.isRunning() ) {
 			return null;
 		}
 		
 		ArrayList<Box> boxes = new ArrayList<Box>();
-		if( this.engine.listFigures.size() > 0 ) {
-			this.engine.listFigures.forEach( x -> {
-				boxes.addAll( x.listBoxes );
-			});
+		
+		try {
+			if( this.engine.listFigures.size() > 0 ) {
+				this.engine.listFigures.forEach( x -> {
+					boxes.addAll( x.listBoxes );
+				});
+			}
+		} catch( Exception e ) {
+			e.printStackTrace();
 		}
-		return new ResponseEntity<ArrayList<Box>>(boxes, HttpStatus.OK);
+
+		return boxes;
 	}
 	
-	@GetMapping("/fallingFigure")
-	public ResponseEntity<ArrayList<Box>> getFallingFigure() {
+	private ArrayList<Box> getFallingFigure() {
 		if( !this.engine.isRunning() ) {
 			return null;
 		}
@@ -101,7 +116,7 @@ public class TetrisController {
 		if( this.engine.fallingFigure != null && this.engine.isInsideOnly(this.engine.fallingFigure) ) {
 			boxes.addAll( this.engine.fallingFigure.listBoxes );
 		}
-		return new ResponseEntity<ArrayList<Box>>(boxes, HttpStatus.OK);
+		return boxes;
 	}
 
 }

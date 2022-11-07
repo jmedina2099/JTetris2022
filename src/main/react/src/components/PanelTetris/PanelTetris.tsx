@@ -1,5 +1,5 @@
 import React, { useContext, useState, KeyboardEvent, useEffect, useRef } from 'react';
-import { ApiServiceContext } from '../../App';
+import { ApiServiceContext, timerDefault } from '../../App';
 import Box, { Caja } from '../Box/Box';
 
 import "./panelTetris.css";
@@ -36,17 +36,12 @@ const PanelTetris = () => {
         break
     }
   }
-  const [myInterval1,setMyInterval1] = useState<NodeJS.Timer>();
-  const [myInterval2,setMyInterval2] = useState<NodeJS.Timer>();
+  context.intervalFetch = useState<NodeJS.Timer>(timerDefault);
   useEffect(() => {
-    if( running && !paused ) {
-      context.apiService.fetchFallingFigure(context.cajasCayendo[1],setMyInterval2);
-      context.apiService.fetchFigures(context.cajas[1],setMyInterval1);
-    }
+    context.apiService.fetchBoard(context);
   }, [context,running,paused]);
   if( !running || paused ) {
-    if( myInterval1 ) clearInterval(myInterval1);
-    if( myInterval2 ) clearInterval(myInterval2);
+    if( context.intervalFetch[0] && context.intervalFetch[0] !== timerDefault ) clearInterval(context.intervalFetch[0]);
   }
   const focusDiv : React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -65,3 +60,5 @@ const PanelTetris = () => {
   }
 
 export default PanelTetris;
+
+

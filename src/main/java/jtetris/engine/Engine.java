@@ -44,6 +44,14 @@ public class Engine implements Runnable {
 		this.running = running;
 	}	
 
+	public boolean isPaused() {
+		return isPaused;
+	}
+
+	public void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
+	}
+
 	public void setPanelTetris(PanelTetris panelTetris) {
 		this.panelTetris = panelTetris;
 	}
