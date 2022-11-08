@@ -94,15 +94,12 @@ public class TetrisController {
 		}
 		
 		ArrayList<Box> boxes = new ArrayList<Box>();
-		
-		try {
-			if( this.engine.listFigures.size() > 0 ) {
-				this.engine.listFigures.forEach( x -> {
-					boxes.addAll( x.listBoxes );
-				});
-			}
-		} catch( Exception e ) {
-			e.printStackTrace();
+
+		if( !this.engine.listFigures.isEmpty() ) {
+			ArrayList<Figure> figuras = new ArrayList<Figure>(this.engine.listFigures);
+			figuras.forEach( x -> {
+				boxes.addAll( x.listBoxes );
+			});
 		}
 
 		return boxes;

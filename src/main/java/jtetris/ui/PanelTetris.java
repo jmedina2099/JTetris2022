@@ -6,11 +6,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import jtetris.engine.Engine;
+import jtetris.figure.Figure;
 
 /**
  * @author jmedina
@@ -49,7 +51,12 @@ public class PanelTetris extends JPanel {
 			if( this.engine.fallingFigure != null ) {
 				this.engine.fallingFigure.paint(g2);
 			}
-			this.engine.listFigures.forEach( x -> doPaint(x::paint, g2) );
+
+			if( !this.engine.listFigures.isEmpty() ) {
+				ArrayList<Figure> figuras = new ArrayList<Figure>(this.engine.listFigures);
+				figuras.forEach( x -> doPaint(x::paint, g2) );
+			}
+
 		} else {
 			String message = "PAUSED";
 			float x = 38;

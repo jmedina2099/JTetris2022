@@ -94,7 +94,7 @@ public class Box implements Cloneable {
 
 	public void clearBox() {
 		this.figure.listBoxes.remove(this);
-		if( this.figure.listBoxes.size() == 0 ) {
+		if( this.figure.listBoxes.isEmpty() ) {
 			this.engine.listFigures.remove( this.figure );
 		}
 	}

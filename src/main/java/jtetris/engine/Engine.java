@@ -95,7 +95,7 @@ public class Engine implements Runnable {
 	
 	public void gameOver() {
 		this.fallingFigure = null;
-		this.listFigures.clear();
+		this.listFigures = new ArrayList<Figure>();
 		this.isPaused = false;
 		this.gameOver = true;
 		if( this.panelTetris != null ) this.panelTetris.repaint(0);
@@ -208,6 +208,7 @@ public class Engine implements Runnable {
 		this.isPaused = false;
 		this.running = true;
 		this.score = 0;
+		if( this.panelScore != null ) this.panelScore.setScore( this.score );
 
 		Figure figure = getNextFigure();
 		addFigure( figure );
