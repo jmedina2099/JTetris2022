@@ -84,6 +84,7 @@ public class TetrisController {
 		board.setPaused( this.engine.isPaused() );
 		board.setFiguresFixed( getFigures() );
 		board.setFallingFigure( getFallingFigure() );
+		board.setScore( this.engine.getScore() );
 		return new ResponseEntity<Board>(board, HttpStatus.OK);
 	}
 	

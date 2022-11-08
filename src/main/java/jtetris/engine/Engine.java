@@ -23,6 +23,7 @@ public class Engine implements Runnable {
 	private PanelScore panelScore;
 	
 	public boolean running = false;
+	private int score = 0;
 	
 	public Figure fallingFigure;
 	public boolean isPaused = false;
@@ -34,6 +35,10 @@ public class Engine implements Runnable {
 
 	public Engine() {
 		this.figureFactory = new FigureFactory(this);
+	}
+	
+	private void addScore(int score) {
+		this.score += score;
 	}
 	
 	public boolean isRunning() {
@@ -58,6 +63,10 @@ public class Engine implements Runnable {
 	
 	public void setPanelScore(PanelScore panelScore) {
 		this.panelScore = panelScore;
+	}
+	
+	public int getScore() {
+		return this.score;
 	}
 
 	public void doStart() {
@@ -156,7 +165,8 @@ public class Engine implements Runnable {
 	private void fixAndClear() {
 		this.listFigures.add( this.fallingFigure );
 		int score = clearLines( this.fallingFigure );
-		if( this.panelScore != null ) this.panelScore.addScore(score);
+		addScore(score);
+		if( this.panelScore != null ) this.panelScore.setScore( this.score );
 	}
 
 	private int clearLines( Figure figure ) {
@@ -197,6 +207,7 @@ public class Engine implements Runnable {
 		this.gameOver = false;
 		this.isPaused = false;
 		this.running = true;
+		this.score = 0;
 
 		Figure figure = getNextFigure();
 		addFigure( figure );
@@ -293,5 +304,5 @@ public class Engine implements Runnable {
 				figure.getXMax()+Box.SIZE <= 200 &&
 				figure.getYMax()+Box.SIZE <= 400d );
 	}
-	
+
 }

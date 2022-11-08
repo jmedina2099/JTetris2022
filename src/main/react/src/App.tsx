@@ -29,20 +29,22 @@ export const timerDefault : NodeJS.Timer = {
 }
 
 export interface Game {
-  apiService: ApiService,
-  handleKeyboard: (e: KeyboardEvent) => void,
-  running: [boolean,Dispatch<React.SetStateAction<boolean>>],
-  paused: [boolean,Dispatch<React.SetStateAction<boolean>>],
-  cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>],
-  cajasCayendo: [Caja[],Dispatch<React.SetStateAction<Caja[]>>],
-  intervalFetch: [NodeJS.Timer, Dispatch<React.SetStateAction<NodeJS.Timer>>],
+  apiService: ApiService
+  handleKeyboard: (e: KeyboardEvent) => void
+  running: [boolean,Dispatch<React.SetStateAction<boolean>>]
+  paused: [boolean,Dispatch<React.SetStateAction<boolean>>]
+  cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
+  cajasCayendo: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
+  intervalFetch: [NodeJS.Timer, Dispatch<React.SetStateAction<NodeJS.Timer>>]
+  score: [number,Dispatch<React.SetStateAction<number>>]
 }
 
 export interface Board {
-  running: boolean,
-  paused: boolean,
-  figuresFixed: Caja[],
+  running: boolean
+  paused: boolean
+  figuresFixed: Caja[]
   fallingFigure: Caja[]
+  score: number
 }
 
 const ApiServiceImpl = new ApiService();
@@ -55,6 +57,7 @@ export const ApiServiceContext = createContext<Game>(
     cajas: [[], () => {}],
     cajasCayendo: [[], () => {}],
     intervalFetch: [timerDefault, () => {}],
+    score: [0, () => {}],
   }
 );
 

@@ -30,8 +30,8 @@ public class PanelScore extends JPanel {
 		init();
 	}
 	
-	public void addScore( int score ) {
-		this.score += score;
+	public void setScore( int score ) {
+		this.score = score;
 		repaint(0);
 	}
 

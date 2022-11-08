@@ -20,6 +20,7 @@ export class ApiService {
       const setBoxesFalling = context.cajasCayendo[1];
       const running = context.running;
       const paused = context.paused;
+      const setScore = context.score[1];
       axios
       .get<Board>( SERVERNAME.address+"/board" )
       .then( response => {
@@ -34,6 +35,7 @@ export class ApiService {
           if( board.running && !board.paused ) {
             setBoxes(board.figuresFixed);
             setBoxesFalling(board.fallingFigure);
+            setScore(board.score);
           } else {
             if( idInterval[0] ) clearInterval(idInterval[0]);
             setBoxes([]);
