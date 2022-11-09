@@ -3,6 +3,8 @@ package jtetris.figure;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -95,7 +97,7 @@ public class Box implements Cloneable {
 	public void clearBox() {
 		this.figure.listBoxes.remove(this);
 		if( this.figure.listBoxes.isEmpty() ) {
-			this.engine.listFigures.remove( this.figure );
+			this.engine.listFigures = this.engine.listFigures.stream().filter( x -> !x.equals(this.figure) ).collect(Collectors.toCollection(ArrayList::new));
 		}
 	}
 }
