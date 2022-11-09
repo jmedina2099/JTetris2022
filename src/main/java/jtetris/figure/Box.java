@@ -95,7 +95,7 @@ public class Box implements Cloneable {
 	}
 
 	public void clearBox() {
-		this.figure.listBoxes.remove(this);
+		this.figure.listBoxes = this.figure.listBoxes.stream().filter( x -> !x.equals(this) ).collect(Collectors.toCollection(ArrayList::new));
 		if( this.figure.listBoxes.isEmpty() ) {
 			this.engine.listFigures = this.engine.listFigures.stream().filter( x -> !x.equals(this.figure) ).collect(Collectors.toCollection(ArrayList::new));
 		}

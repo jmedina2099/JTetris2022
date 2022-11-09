@@ -1,13 +1,34 @@
 import React, { useContext, useState, KeyboardEvent, useEffect, useRef } from 'react';
-import { ApiServiceContext, timerDefault } from '../../App';
+import { ApiServiceContext, Game, timerDefault } from '../../App';
 import Box, { Caja } from '../Box/Box';
 
 import "./panelTetris.css";
+
+const renderGameOver = () => {
+  return <div className="message"><div className="gameOverLabel">GAME OVER</div></div>;
+}
+
+const renderPaused = () => {
+  return <div className="message"><div className="pausedLabel">PAUSED</div></div>;
+} 
+
+const renderFigures = ( context : Game ) => {
+  const cajasCayendo = context.cajasCayendo[0];
+  const cajas = context.cajas[0];
+  const first = cajasCayendo.map( box => {
+    return <Box key={box.x+"-"+box.y} caja={box}/>;
+  });
+  const second = cajas.map( box => {
+    return <Box key={box.x+"-"+box.y} caja={box}/>;
+  });
+  return <>{first}{second}</>
+}
 
 const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
   const running = context.running[0];
   const paused = context.paused[0];
+  const gameOver = context.gameOver[0];
   context.cajas = useState<Caja[]>([]);
   context.cajasCayendo = useState<Caja[]>([]);
   context.handleKeyboard = (e: KeyboardEvent): void => {
@@ -49,15 +70,12 @@ const PanelTetris = () => {
    }, [focusDiv]);
   return (
     <div className="panelTetris" tabIndex={0} ref={focusDiv} onKeyDown={context.handleKeyboard}>
-        {context.cajasCayendo[0].map( box => {
-          return <Box key={box.x+"-"+box.y} caja={box}/>;
-        })}
-        {context.cajas[0].map( box => {
-          return <Box key={box.x+"-"+box.y} caja={box}/>;
-        })}
+      {running?
+        (paused? renderPaused(): renderFigures(context)):
+        (gameOver? renderGameOver(): "")}
     </div>
   );
-  }
+}
 
 export default PanelTetris;
 

@@ -20,6 +20,7 @@ export class ApiService {
       const setBoxesFalling = context.cajasCayendo[1];
       const running = context.running;
       const paused = context.paused;
+      const gameOver = context.gameOver;
       const setScore = context.score[1];
       axios
       .get<Board>( SERVERNAME.address+"/board" )
@@ -31,6 +32,9 @@ export class ApiService {
           }
           if( paused[0] !== board.paused ) {
             paused[1]( board.paused );
+          }
+          if( gameOver[0] !== board.gameOver ) {
+            gameOver[1]( board.gameOver );
           }
           if( board.running && !board.paused ) {
             setBoxes(board.figuresFixed);

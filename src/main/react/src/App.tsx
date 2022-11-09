@@ -5,11 +5,6 @@ import ApiService from './service/ApiService';
 
 import './App.css';
 
-export interface State {
-  running: boolean,
-  paused: boolean
-}
-
 export const timerDefault : NodeJS.Timer = {
   hasRef: function (): boolean {
     throw new Error('Function not implemented.');
@@ -33,6 +28,7 @@ export interface Game {
   handleKeyboard: (e: KeyboardEvent) => void
   running: [boolean,Dispatch<React.SetStateAction<boolean>>]
   paused: [boolean,Dispatch<React.SetStateAction<boolean>>]
+  gameOver: [boolean,Dispatch<React.SetStateAction<boolean>>]
   cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
   cajasCayendo: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
   intervalFetch: [NodeJS.Timer, Dispatch<React.SetStateAction<NodeJS.Timer>>]
@@ -42,6 +38,7 @@ export interface Game {
 export interface Board {
   running: boolean
   paused: boolean
+  gameOver: boolean
   figuresFixed: Caja[]
   fallingFigure: Caja[]
   score: number
@@ -54,6 +51,7 @@ export const ApiServiceContext = createContext<Game>(
     handleKeyboard: (e: KeyboardEvent) => {},
     running: [false, () => {} ],
     paused: [false, () => {} ],
+    gameOver: [false, () => {}],
     cajas: [[], () => {}],
     cajasCayendo: [[], () => {}],
     intervalFetch: [timerDefault, () => {}],
@@ -65,6 +63,7 @@ function App() {
   const context = useContext(ApiServiceContext);
   context.running = useState<boolean>(false);
   context.paused = useState<boolean>(false);
+  context.gameOver = useState<boolean>(false);
   return <VentanaPrincipal/>;
 }
 

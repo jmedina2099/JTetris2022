@@ -57,6 +57,14 @@ public class Engine implements Runnable {
 		this.isPaused = isPaused;
 	}
 
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
 	public void setPanelTetris(PanelTetris panelTetris) {
 		this.panelTetris = panelTetris;
 	}

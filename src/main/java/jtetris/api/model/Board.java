@@ -22,6 +22,7 @@ public class Board {
 	
 	boolean running;
 	boolean paused;
+	boolean gameOver;
 	
 	public Board() {
 	}
@@ -72,6 +73,14 @@ public class Board {
 
 	public void setPaused(boolean paused) {
 		this.paused = paused;
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 
 }

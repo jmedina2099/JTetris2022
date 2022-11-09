@@ -85,6 +85,7 @@ public class TetrisController {
 		board.setFiguresFixed( getFigures() );
 		board.setFallingFigure( getFallingFigure() );
 		board.setScore( this.engine.getScore() );
+		board.setGameOver( this.engine.isGameOver() );
 		return new ResponseEntity<Board>(board, HttpStatus.OK);
 	}
 	
