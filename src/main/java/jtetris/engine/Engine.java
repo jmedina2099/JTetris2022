@@ -3,8 +3,10 @@ package jtetris.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import jtetris.api.rabbitmq.SendScore;
 import jtetris.figure.Box;
 import jtetris.figure.Figure;
 import jtetris.figure.FigureFactory;
@@ -32,6 +34,9 @@ public class Engine implements Runnable {
 	public ArrayList<Figure> listFigures = new ArrayList<Figure>();
 	private Object b;
 	private Thread thread;
+	
+	@Autowired
+	private SendScore sendScore;
 
 	public Engine() {
 		this.figureFactory = new FigureFactory(this);
@@ -173,8 +178,11 @@ public class Engine implements Runnable {
 	private void fixAndClear() {
 		this.listFigures.add( this.fallingFigure );
 		int score = clearLines( this.fallingFigure );
-		addScore(score);
-		if( this.panelScore != null ) this.panelScore.setScore( this.score );
+		if( score > 0 ) {
+			addScore(score);
+			if( this.panelScore != null ) this.panelScore.setScore( this.score );
+			if( this.sendScore != null ) this.sendScore.sendScore(this.score);
+		}
 	}
 
 	private int clearLines( Figure figure ) {

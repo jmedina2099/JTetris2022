@@ -44,6 +44,9 @@ export class ApiService {
             if( idInterval[0] ) clearInterval(idInterval[0]);
             setBoxes([]);
             setBoxesFalling([]);
+            if( board.paused ) {
+              setScore(board.score);
+            }
           }
         } else {
           if( idInterval[0] ) clearInterval(idInterval[0]);

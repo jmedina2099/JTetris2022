@@ -1,3 +1,4 @@
 src/main/react/node_modules
 src/main/react/build
 target
+src/main/react/src/rabbit-server/node_modules
