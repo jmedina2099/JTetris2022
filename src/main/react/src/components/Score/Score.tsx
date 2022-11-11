@@ -1,32 +1,28 @@
 import { useContext, useEffect, useState } from 'react';
-import { Socket } from 'socket.io-client';
 import { ApiServiceContext } from '../../App';
 
 import "./score.css";
 
-interface ScoreProps {
-    socket: Socket
-}
-
-const Score = ( props : ScoreProps ) => {
-
-    const context = useContext(ApiServiceContext);
-    context.score = useState<number>(0);
-  
-    useEffect(() => {
-        const scoreListener = (score: number) => {
-            console.log( 'score from rabbitmq = '+score )
-            context.score[1](score);
-          };
-        props.socket.on('message', scoreListener);
-        return () => {
-            props.socket.off('message', scoreListener);
-        };
-      }, [context,props.socket]);
+const Score = () => {
+  const context = useContext(ApiServiceContext);
+  context.score = useState<number>(0);
+  const score = context.score[0];
+  const setScore = context.score[1];
+  const socket = context.socket[0];
+  useEffect(() => {
+    const scoreListener = (score: number) => {
+      console.log('score from rabbitmq = ' + score)
+      setScore(score);
+    };
+    if( socket ) socket.on('message', scoreListener);
+    return () => {
+      if( socket ) socket.off('message', scoreListener);
+    };
+  }, [socket,setScore]);
 
   return (
-    <div className="scoreLabel">{props.socket? context.score[0]: ""}</div>
+    <div className="scoreLabel">{score}</div>
   );
-  }
+}
 
 export default Score;

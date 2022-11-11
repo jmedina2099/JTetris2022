@@ -1,27 +1,10 @@
+import { Socket } from 'socket.io-client';
 import React, { useState, createContext, useContext, KeyboardEvent, Dispatch } from 'react';
 import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
 import ApiService from './service/ApiService';
 
 import './App.css';
-
-export const timerDefault : NodeJS.Timer = {
-  hasRef: function (): boolean {
-    throw new Error('Function not implemented.');
-  },
-  refresh: function (): NodeJS.Timer {
-    throw new Error('Function not implemented.');
-  },
-  [Symbol.toPrimitive]: function (): number {
-    throw new Error('Function not implemented.');
-  },
-  ref: function (): NodeJS.Timer {
-    throw new Error('Function not implemented.');
-  },
-  unref: function (): NodeJS.Timer {
-    throw new Error('Function not implemented.');
-  }
-}
 
 export interface Game {
   apiService: ApiService
@@ -31,8 +14,9 @@ export interface Game {
   gameOver: [boolean,Dispatch<React.SetStateAction<boolean>>]
   cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
   cajasCayendo: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
-  intervalFetch: [NodeJS.Timer, Dispatch<React.SetStateAction<NodeJS.Timer>>]
+  intervalFetch: [NodeJS.Timer | undefined, Dispatch<React.SetStateAction<NodeJS.Timer | undefined>>]
   score: [number,Dispatch<React.SetStateAction<number>>]
+  socket: [Socket | undefined,Dispatch<React.SetStateAction<Socket | undefined>>];
 }
 
 export interface Board {
@@ -54,8 +38,9 @@ export const ApiServiceContext = createContext<Game>(
     gameOver: [false, () => {}],
     cajas: [[], () => {}],
     cajasCayendo: [[], () => {}],
-    intervalFetch: [timerDefault, () => {}],
+    intervalFetch: [undefined, () => {}],
     score: [0, () => {}],
+    socket: [undefined, () => {}],
   }
 );
 

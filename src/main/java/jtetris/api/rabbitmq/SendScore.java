@@ -28,9 +28,7 @@ public class SendScore {
 			String message = ""+score;
 			channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (TimeoutException e) {
-			e.printStackTrace();
 		}
 	}
 

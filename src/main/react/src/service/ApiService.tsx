@@ -21,6 +21,7 @@ export class ApiService {
       const running = context.running;
       const paused = context.paused;
       const gameOver = context.gameOver;
+      const score = context.score[0];
       const setScore = context.score[1];
       axios
       .get<Board>( SERVERNAME.address+"/board" )
@@ -39,13 +40,17 @@ export class ApiService {
           if( board.running && !board.paused ) {
             setBoxes(board.figuresFixed);
             setBoxesFalling(board.fallingFigure);
-            setScore(board.score);
+            if( score !== board.score ) {
+              setScore(board.score);
+            }
           } else {
             if( idInterval[0] ) clearInterval(idInterval[0]);
             setBoxes([]);
             setBoxesFalling([]);
             if( board.paused ) {
-              setScore(board.score);
+              if( score !== board.score ) {
+                setScore(board.score);
+              }
             }
           }
         } else {
