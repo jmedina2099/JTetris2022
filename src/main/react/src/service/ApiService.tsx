@@ -2,6 +2,7 @@ import SERVERNAME from '../servername.json'
 
 import axios from 'axios';
 import { Board, Game } from '../App';
+import { Figura } from '../components/Figure/Figure';
 
 export class ApiService {
 
@@ -17,10 +18,11 @@ export class ApiService {
 
     getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
       const setBoxes = context.cajas[1];
-      const setBoxesFalling = context.cajasCayendo[1];
+      const setFigureFalling = context.figuraCayendo[1];
       const running = context.running;
       const paused = context.paused;
       const gameOver = context.gameOver;
+      const hash = context.hash;
       const score = context.score[0];
       const setScore = context.score[1];
       axios
@@ -37,16 +39,23 @@ export class ApiService {
           if( gameOver[0] !== board.gameOver ) {
             gameOver[1]( board.gameOver );
           }
+          if( hash[0] !== board.hash ) {
+            hash[1]( board.hash );
+          }
           if( board.running && !board.paused ) {
-            setBoxes(board.figuresFixed);
-            setBoxesFalling(board.fallingFigure);
-            if( score !== board.score ) {
+            if( board.figuresFixed && Array.isArray(board.figuresFixed) && board.figuresFixed.length > 0 ) {
+              setBoxes(board.figuresFixed);
+            }
+            if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) && board.fallingFigure.listBoxes.length > 0 ) {
+              setFigureFalling(board.fallingFigure);
+            }
+            if( board.score && score !== board.score ) {
               setScore(board.score);
             }
           } else {
             if( idInterval[0] ) clearInterval(idInterval[0]);
             setBoxes([]);
-            setBoxesFalling([]);
+            setFigureFalling(undefined);
             if( board.paused ) {
               if( score !== board.score ) {
                 setScore(board.score);
@@ -56,7 +65,7 @@ export class ApiService {
         } else {
           if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxes([]);
-          setBoxesFalling([]);
+          setFigureFalling(undefined);
         }
       })
       .catch( (error) => {
@@ -97,68 +106,78 @@ export class ApiService {
       });
     }
 
-    space( setCajasCayendo : Function ) {
+    space( setFiguraCayendo : Function, hash : number ) {
       axios
-      .get<boolean>( SERVERNAME.address+"/space" )
+      .get<Figura>( SERVERNAME.address+"/space" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) && response.data.length > 0 ) {
-          setCajasCayendo(response.data);
+        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+          if( hash === response.data.hashBoard ) {
+            setFiguraCayendo(response.data);
+          }
         }
       })
       .catch( (error) => {
-        setCajasCayendo([]);
+        setFiguraCayendo([]);
       });
     }
 
-    left( setCajasCayendo : Function ) {
+    left( setFiguraCayendo : Function, hash : number ) {
       axios
-      .get<boolean>( SERVERNAME.address+"/left" )
+      .get<Figura>( SERVERNAME.address+"/left" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) && response.data.length > 0 ) {
-          setCajasCayendo(response.data);
+        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+          if( hash === response.data.hashBoard ) {
+            setFiguraCayendo(response.data);
+          }
         }
       })
       .catch( (error) => {
-        setCajasCayendo([]);
+        setFiguraCayendo([]);
       });
     }
 
-    right( setCajasCayendo : Function) {
+    right( setFiguraCayendo : Function, hash : number ) {
       axios
-      .get<boolean>( SERVERNAME.address+"/right" )
+      .get<Figura>( SERVERNAME.address+"/right" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) && response.data.length > 0 ) {
-          setCajasCayendo(response.data);
+        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+          if( hash === response.data.hashBoard ) {
+            setFiguraCayendo(response.data);
+          }
         }
       })
       .catch( (error) => {
-        setCajasCayendo([]);
+        setFiguraCayendo([]);
       });
     }
 
-    up( setCajasCayendo : Function) {
+    up( setFiguraCayendo : Function, hash : number) {
       axios
-      .get<boolean>( SERVERNAME.address+"/up" )
+      .get<Figura>( SERVERNAME.address+"/up" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) && response.data.length > 0 ) {
-          setCajasCayendo(response.data);
+        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+          if( hash === response.data.hashBoard ) {
+            setFiguraCayendo(response.data);
+          }
         }
       })
       .catch( (error) => {
-        setCajasCayendo([]);
+        setFiguraCayendo([]);
       });
     }
 
-    down( setCajasCayendo : Function) {
+    down( setFiguraCayendo : Function, hash : number) {
       axios
-      .get<boolean>( SERVERNAME.address+"/down" )
+      .get<Figura>( SERVERNAME.address+"/down" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data) && response.data.length > 0 ) {
-          setCajasCayendo(response.data);
+        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+          if( hash === response.data.hashBoard ) {
+            setFiguraCayendo(response.data);
+          }
         }
       })
       .catch( (error) => {
-        setCajasCayendo([]);
+        setFiguraCayendo([]);
       });
     }
 

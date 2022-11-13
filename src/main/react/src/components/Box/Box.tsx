@@ -3,9 +3,10 @@ import React from 'react';
 import "./box.css";
 
 export interface Caja {
-  x: number;
-  y: number;
-  color: string;
+  x: number
+  y: number
+  color: string
+  hash: number
 }
 
 type BoxProps = {

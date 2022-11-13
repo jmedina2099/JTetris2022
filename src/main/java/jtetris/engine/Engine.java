@@ -38,6 +38,8 @@ public class Engine implements Runnable {
 	@Autowired
 	private SendScore sendScore;
 
+	private boolean figureFell = false;
+
 	public Engine() {
 		this.figureFactory = new FigureFactory(this);
 	}
@@ -92,6 +94,14 @@ public class Engine implements Runnable {
 	private Figure getNextFigure() {
 		return this.figureFactory.getNextFigure();
 	}
+	
+	public Figure getFigureFalling() {
+		if( this.figureFell ) {
+			return null;
+		}
+		
+		return this.fallingFigure;
+	}
 
 	public boolean togglePause() {
 		if( this.gameOver ) {
@@ -119,12 +129,13 @@ public class Engine implements Runnable {
 			return false;
 		}
 		this.fallingFigure = figure;
+		this.figureFell  = false; // new figure.
 		if( this.panelTetris != null ) this.panelTetris.repaint(0);
 		return true;
 	}	
 	
-	public void rotate( int direction ) {
-		if( this.fallingFigure != null ) {
+	public boolean rotate( int direction ) {
+		if( this.fallingFigure != null && !this.figureFell ) {
 			Figure figureCopy = this.fallingFigure.clone();
 			figureCopy.rotate(direction);
 			if( isInside( figureCopy ) &&
@@ -133,11 +144,13 @@ public class Engine implements Runnable {
 				this.fallingFigure.rotation = figureCopy.rotation;
 				if( this.panelTetris != null ) this.panelTetris.repaint(0);
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	public boolean moveLeft() {
-		if( this.fallingFigure != null ) {
+		if( this.fallingFigure != null && !this.figureFell ) {
 			if(  0d <= this.fallingFigure.getXMin()-Box.SIZE ) {
 				if( !hitLeft( this.fallingFigure.getListBoxes() ) ) {
 					this.fallingFigure.moveLeft();
@@ -150,7 +163,7 @@ public class Engine implements Runnable {
 	}
 
 	public boolean moveRight() {
-		if( this.fallingFigure != null ) {
+		if( this.fallingFigure != null && !this.figureFell ) {
 			if( this.fallingFigure.getXMax()+Box.SIZE < 200d ) {
 				if( !hitRight( this.fallingFigure.getListBoxes() ) ) {
 					this.fallingFigure.moveRight();
@@ -163,7 +176,7 @@ public class Engine implements Runnable {
 	}
 	
 	public boolean moveDown() {
-		if( this.fallingFigure != null ) {
+		if( this.fallingFigure != null && !this.figureFell ) {
 			if( this.fallingFigure.getYMax()+Box.SIZE < 400d ) {
 				if( !hitDown( this.fallingFigure.getListBoxes() ) ) {
 					this.fallingFigure.moveDown();
@@ -224,6 +237,7 @@ public class Engine implements Runnable {
 		this.isPaused = false;
 		this.running = true;
 		this.score = 0;
+		this.figureFell = false;
 		if( this.panelScore != null ) this.panelScore.setScore( this.score );
 
 		Figure figure = getNextFigure();
@@ -247,6 +261,7 @@ public class Engine implements Runnable {
 				}
 				
 				if( !moveDown() ) {
+					this.figureFell = true; // figure fixed.
 					fixAndClear();
 					if( !addFigure( figure = getNextFigure() ) ) {
 						gameOver();
@@ -316,10 +331,20 @@ public class Engine implements Runnable {
 	}
 	
 	public boolean isInsideOnly( Figure figure ) {
-		return ( 0 <= figure.getXMin() &&
+		return ( figure!=null && 0 <= figure.getXMin() &&
 				0 <= figure.getYMin() &&
 				figure.getXMax()+Box.SIZE <= 200 &&
 				figure.getYMax()+Box.SIZE <= 400d );
 	}
 
+	public int getHash() {
+		int[] hash = {0};
+		ArrayList<Figure> listOfFigures = this.listFigures;
+		listOfFigures.forEach( x -> {
+			hash[0] ^= x.getHash();
+		});
+		int hashFinal = this.fallingFigure != null? hashFinal = hash[0]^this.fallingFigure.getHash(): hash[0];
+		if( this.fallingFigure != null ) this.fallingFigure.setHashBoard(hashFinal);
+		return hashFinal;
+	}
 }

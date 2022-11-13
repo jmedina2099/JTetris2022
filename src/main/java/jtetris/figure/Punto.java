@@ -24,4 +24,8 @@ public class Punto
 		return new Punto( super.x, super.y );
 	}
 	
+	@Override
+	public String toString() {
+		return super.x+","+super.y;
+	}
 }

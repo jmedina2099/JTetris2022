@@ -8,22 +8,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author jmedina
  *
  */
 public abstract class Figure implements Cloneable {
 
+	@JsonIgnore
 	protected Punto center = new Punto();
+	
 	public ArrayList<Box> listBoxes = new ArrayList<Box>();
-	
+
+	@JsonIgnore
 	public final static int RIGHT_ROTATION = 1;
+
+	@JsonIgnore
 	public final static int LEFT_ROTATION = -1;
-	
+
+	@JsonIgnore
 	public int numRotations;
+	
+	@JsonIgnore	
 	public int rotation = 0;
 	
+	@JsonIgnore
 	public Colour colour;
+	
+	public int hashBoard = 0;
 	
 	protected Figure( int numRotations, Colour colour ) {
 		this.numRotations = numRotations;
@@ -167,7 +180,8 @@ public abstract class Figure implements Cloneable {
 		this.listBoxes.forEach( x -> src[index[0]++] = x.coord );
 		return src;
 	}
-	
+
+	@JsonIgnore
 	public double getXMin() {
 		double leftCorner[] = { 200d };
 		this.listBoxes.forEach( x -> {
@@ -178,6 +192,7 @@ public abstract class Figure implements Cloneable {
 		return leftCorner[0];
 	}
 	
+	@JsonIgnore	
 	public double getXMax() {
 		double rightCorner[] = { 0d };
 		this.listBoxes.forEach( x -> {
@@ -187,7 +202,8 @@ public abstract class Figure implements Cloneable {
 		});
 		return rightCorner[0];
 	}
-	
+
+	@JsonIgnore
 	public double getYMin() {
 		double topCorner[] = { 400d };
 		this.listBoxes.forEach( x -> {
@@ -198,6 +214,7 @@ public abstract class Figure implements Cloneable {
 		return topCorner[0];
 	}	
 
+	@JsonIgnore
 	public double getYMax() {
 		double bottomCorner[] = { 0d };
 		this.listBoxes.forEach( x -> {
@@ -224,9 +241,25 @@ public abstract class Figure implements Cloneable {
 	public String toString() {
 		return this.listBoxes.toString();
 	}
+	
+	@JsonIgnore
+	public int getHash() {
+		int[] hash = {0};
+		this.listBoxes.forEach( x -> {
+			hash[0] ^= x.getHash();
+		});
+		return hash[0];
+	}
 
 	public List<Box> getBoxesWithY( double yMax ) {
 		return this.listBoxes.stream().filter( x -> x.coord.y == yMax ).collect(Collectors.toList());
 	}
 
+	public void setHashBoard(int hash) {
+		this.hashBoard  = hash;
+	}
+
+	public int getHashBoard() {
+		return this.hashBoard;
+	}
 }

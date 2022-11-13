@@ -1,6 +1,7 @@
 import React, { useContext, useState, KeyboardEvent, useEffect, useRef } from 'react';
 import { ApiServiceContext, Game } from '../../App';
 import Box, { Caja } from '../Box/Box';
+import Figure, { Figura } from '../Figure/Figure';
 
 import "./panelTetris.css";
 
@@ -13,11 +14,9 @@ const renderPaused = () => {
 } 
 
 const renderFigures = ( context : Game ) => {
-  const cajasCayendo = context.cajasCayendo[0];
+  const figuraCayendo = context.figuraCayendo[0];
   const cajas = context.cajas[0];
-  const first = cajasCayendo.map( box => {
-    return <Box key={box.x+"-"+box.y} caja={box}/>;
-  });
+  const first = figuraCayendo? <Figure listBoxes={figuraCayendo.listBoxes} hashBoard={figuraCayendo.hashBoard}/>: <></>;
   const second = cajas.map( box => {
     return <Box key={box.x+"-"+box.y} caja={box}/>;
   });
@@ -29,8 +28,9 @@ const PanelTetris = () => {
   const running = context.running[0];
   const paused = context.paused[0];
   const gameOver = context.gameOver[0];
+  const hash = context.hash[0];
   context.cajas = useState<Caja[]>([]);
-  context.cajasCayendo = useState<Caja[]>([]);
+  context.figuraCayendo = useState<Figura>();
   context.handleKeyboard = (e: KeyboardEvent): void => {
     switch (e.code) {
       case "Enter":
@@ -41,19 +41,19 @@ const PanelTetris = () => {
         }
         break;
       case "Space":
-        context.apiService.space(context.cajasCayendo[1]);
+        context.apiService.space(context.figuraCayendo[1],hash);
         break;
       case "ArrowLeft":
-        context.apiService.left(context.cajasCayendo[1]);
+        context.apiService.left(context.figuraCayendo[1],hash);
         break;
       case "ArrowRight":
-        context.apiService.right(context.cajasCayendo[1]);
+        context.apiService.right(context.figuraCayendo[1],hash);
         break;
       case "ArrowUp":
-        context.apiService.up(context.cajasCayendo[1]);
+        context.apiService.up(context.figuraCayendo[1],hash);
         break
       case "ArrowDown":
-        context.apiService.down(context.cajasCayendo[1]);
+        context.apiService.down(context.figuraCayendo[1],hash);
         break
     }
   }

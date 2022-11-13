@@ -6,6 +6,7 @@ package jtetris.api.model;
 import java.util.ArrayList;
 
 import jtetris.figure.Box;
+import jtetris.figure.Figure;
 
 /**
  * @author jmedina
@@ -14,7 +15,7 @@ import jtetris.figure.Box;
 public class Board {
 	
 	ArrayList<Box> figuresFixed;
-	ArrayList<Box> fallingFigure;
+	Figure fallingFigure;
 	
 	int score;
 	
@@ -23,6 +24,7 @@ public class Board {
 	boolean running;
 	boolean paused;
 	boolean gameOver;
+	int hash;
 	
 	public Board() {
 	}
@@ -35,11 +37,11 @@ public class Board {
 		this.figuresFixed = figuresFixed;
 	}
 
-	public ArrayList<Box> getFallingFigure() {
+	public Figure getFallingFigure() {
 		return fallingFigure;
 	}
 
-	public void setFallingFigure(ArrayList<Box> fallingFigure) {
+	public void setFallingFigure(Figure fallingFigure) {
 		this.fallingFigure = fallingFigure;
 	}
 
@@ -81,6 +83,14 @@ public class Board {
 
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
+	}
+
+	public void setHash(int hash) {
+		this.hash = hash;
+	}
+
+	public int getHash() {
+		return hash;
 	}
 
 }

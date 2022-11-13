@@ -91,7 +91,11 @@ public class Box implements Cloneable {
 	
 	@Override
 	public String toString() {
-		return coord.toString();
+		return coord.toString()+","+color.toString();
+	}
+	
+	public int getHash() {
+		return toString().hashCode();
 	}
 
 	public void clearBox() {
@@ -100,4 +104,5 @@ public class Box implements Cloneable {
 			this.engine.listFigures = this.engine.listFigures.stream().filter( x -> !x.equals(this.figure) ).collect(Collectors.toCollection(ArrayList::new));
 		}
 	}
+	
 }
