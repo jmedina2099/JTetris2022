@@ -87,19 +87,28 @@ public class TetrisController {
 	@GetMapping("/space")
 	public ResponseEntity<Figure> space() {
 		while( this.engine.moveDown() );
-		return new ResponseEntity<Figure>(getFallingFigure(), HttpStatus.OK);
+		Figure figureFalling = getFallingFigure();
+		this.engine.figureFell = true; // figure fixed.
+		return new ResponseEntity<Figure>(figureFalling, HttpStatus.OK);
 	}
 	
 	@GetMapping("/board")
 	public ResponseEntity<Board> getBoard() {
 		Board board = new Board();
+		
+		int hashBoard = this.engine.getHash();
+		Figure fallingFigure = getFallingFigure();
+		if( fallingFigure != null ) {
+			fallingFigure.setHashBoard(hashBoard);
+		}
+		
+		board.setHash( hashBoard );
 		board.setRunning( this.engine.isRunning() );
 		board.setPaused( this.engine.isPaused() );
-		board.setFallingFigure( getFallingFigure() );
+		board.setFallingFigure( fallingFigure );
 		board.setFiguresFixed( getFigures() );
 		board.setScore( this.engine.getScore() );
 		board.setGameOver( this.engine.isGameOver() );
-		board.setHash( this.engine.getHash() );
 		return new ResponseEntity<Board>(board, HttpStatus.OK);
 	}
 	

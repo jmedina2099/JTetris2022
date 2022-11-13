@@ -38,7 +38,7 @@ public class Engine implements Runnable {
 	@Autowired
 	private SendScore sendScore;
 
-	private boolean figureFell = false;
+	public boolean figureFell = false;
 
 	public Engine() {
 		this.figureFactory = new FigureFactory(this);
@@ -344,7 +344,6 @@ public class Engine implements Runnable {
 			hash[0] ^= x.getHash();
 		});
 		int hashFinal = this.fallingFigure != null? hashFinal = hash[0]^this.fallingFigure.getHash(): hash[0];
-		if( this.fallingFigure != null ) this.fallingFigure.setHashBoard(hashFinal);
 		return hashFinal;
 	}
 }
