@@ -28,17 +28,28 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         if (error1) {
             throw error1;
         }
-
-        var queue = 'spring-boot';
-
+        var queue = 'score-queue';
         channel.assertQueue(queue, {
             durable: false
         });
-
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-
         channel.consume(queue, function(msg) {
-            socketConection[0].sendMessage(msg.content.toString());
+            socketConection[0].sendScore(msg.content.toString());
+        }, {
+            noAck: true
+        });
+    });
+    connection.createChannel(function(error1, channel) {
+        if (error1) {
+            throw error1;
+        }
+        var queue = 'board-queue';
+        channel.assertQueue(queue, {
+            durable: false
+        });
+        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+        channel.consume(queue, function(msg) {
+            socketConection[0].sendBoard(msg.content.toString());
         }, {
             noAck: true
         });

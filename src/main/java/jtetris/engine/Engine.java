@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jtetris.api.rabbitmq.SendScore;
+import jtetris.api.model.Board;
+import jtetris.api.rabbitmq.SendToQueue;
 import jtetris.figure.Box;
 import jtetris.figure.Figure;
 import jtetris.figure.FigureFactory;
@@ -36,7 +37,7 @@ public class Engine implements Runnable {
 	private Thread thread;
 	
 	@Autowired
-	private SendScore sendScore;
+	private SendToQueue sendToQueue;
 
 	public boolean figureFell = false;
 
@@ -194,7 +195,7 @@ public class Engine implements Runnable {
 		if( score > 0 ) {
 			addScore(score);
 			if( this.panelScore != null ) this.panelScore.setScore( this.score );
-			if( this.sendScore != null ) this.sendScore.sendScore(this.score);
+			if( this.sendToQueue != null ) this.sendToQueue.sendScore(this.score);
 		}
 	}
 
@@ -267,6 +268,7 @@ public class Engine implements Runnable {
 						gameOver();
 						this.running = false;
 					}
+					if( this.sendToQueue != null ) this.sendToQueue.sendBoard(getBoard());
 				}
 			}
 		}
@@ -345,5 +347,56 @@ public class Engine implements Runnable {
 		});
 		int hashFinal = this.fallingFigure != null? hashFinal = hash[0]^this.fallingFigure.getHash(): hash[0];
 		return hashFinal;
+	}
+	
+	public Figure getFallingFigureInside() {
+		if( !isRunning() ) {
+			return null;
+		}
+		
+		Figure figureFalling = getFigureFalling();
+		if( isInsideOnly(figureFalling) ) {
+			return figureFalling;
+		} else {
+			return null;
+		}
+	}
+	
+	private ArrayList<Box> getFiguresBoxes() {
+		if( !isRunning() ) {
+			return null;
+		}
+		
+		ArrayList<Box> boxes = new ArrayList<Box>();
+
+		if( !this.listFigures.isEmpty() ) {
+			ArrayList<Figure> figuras = new ArrayList<Figure>(this.listFigures);
+			figuras.forEach( x -> {
+				boxes.addAll( x.listBoxes );
+			});
+		}
+
+		return boxes;
+	}
+
+	
+	public Board getBoard() {
+		Board board = new Board();
+		
+		int hashBoard = getHash();
+		Figure fallingFigure = getFallingFigureInside();
+		if( fallingFigure != null ) {
+			fallingFigure.setHashBoard(hashBoard);
+		}
+		
+		board.setHash( hashBoard );
+		board.setRunning( isRunning() );
+		board.setPaused( isPaused() );
+		board.setFallingFigure( fallingFigure );
+		board.setFiguresFixed( getFiguresBoxes() );
+		board.setScore( getScore() );
+		board.setGameOver( isGameOver() );
+		
+		return board;
 	}
 }

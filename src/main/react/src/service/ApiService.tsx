@@ -19,49 +19,11 @@ export class ApiService {
     getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
       const setBoxes = context.cajas[1];
       const setFigureFalling = context.figuraCayendo[1];
-      const running = context.running;
-      const paused = context.paused;
-      const gameOver = context.gameOver;
-      const hash = context.hash;
-      const score = context.score[0];
-      const setScore = context.score[1];
       axios
       .get<Board>( SERVERNAME.address+"/board" )
       .then( response => {
         if( response && response.data ) {
-          const board = response.data;
-          if( running[0] !== board.running ) {
-            running[1]( board.running );
-          }
-          if( paused[0] !== board.paused ) {
-            paused[1]( board.paused );
-          }
-          if( gameOver[0] !== board.gameOver ) {
-            gameOver[1]( board.gameOver );
-          }
-          if( hash[0] !== board.hash ) {
-            hash[1]( board.hash );
-          }
-          if( board.running && !board.paused ) {
-            if( board.figuresFixed && Array.isArray(board.figuresFixed) && board.figuresFixed.length > 0 ) {
-              setBoxes(board.figuresFixed);
-            }
-            if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) && board.fallingFigure.listBoxes.length > 0 ) {
-              setFigureFalling(board.fallingFigure);
-            }
-            if( board.score && score !== board.score ) {
-              setScore(board.score);
-            }
-          } else {
-            if( idInterval[0] ) clearInterval(idInterval[0]);
-            setBoxes([]);
-            setFigureFalling(undefined);
-            if( board.paused ) {
-              if( score !== board.score ) {
-                setScore(board.score);
-              }
-            }
-          }
+          this.setBoard(context,response.data,idInterval);
         } else {
           if( idInterval[0] ) clearInterval(idInterval[0]);
           setBoxes([]);
@@ -72,6 +34,49 @@ export class ApiService {
         if( idInterval[0] ) clearInterval(idInterval[0]);
       });
     }
+
+  setBoard(context : Game, board: Board, idInterval : NodeJS.Timer[]) {
+    const setBoxes = context.cajas[1];
+    const setFigureFalling = context.figuraCayendo[1];
+    const running = context.running;
+    const paused = context.paused;
+    const gameOver = context.gameOver;
+    const hash = context.hash;
+    const score = context.score[0];
+    const setScore = context.score[1];
+    if( running[0] !== board.running ) {
+      running[1]( board.running );
+    }
+    if( paused[0] !== board.paused ) {
+      paused[1]( board.paused );
+    }
+    if( gameOver[0] !== board.gameOver ) {
+      gameOver[1]( board.gameOver );
+    }
+    if( !hash[0] || hash[0] !== board.hash ) {
+      hash[1]( board.hash );
+    }
+    if( board.running && !board.paused ) {
+      if( board.figuresFixed && Array.isArray(board.figuresFixed) && board.figuresFixed.length > 0 ) {
+        setBoxes(board.figuresFixed);
+      }
+      if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) && board.fallingFigure.listBoxes.length > 0 ) {
+        setFigureFalling(board.fallingFigure);
+      }
+      if( board.score && score !== board.score ) {
+        setScore(board.score);
+      }
+    } else {
+      if( idInterval[0] ) clearInterval(idInterval[0]);
+      setBoxes([]);
+      setFigureFalling(undefined);
+      if( board.paused ) {
+        if( score !== board.score ) {
+          setScore(board.score);
+        }
+      }
+    }
+  }
 
     start( setRunning : Function, setPaused : Function ) {
       axios

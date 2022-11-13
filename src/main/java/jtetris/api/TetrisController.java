@@ -1,7 +1,5 @@
 package jtetris.api;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jtetris.api.model.Board;
 import jtetris.engine.Engine;
-import jtetris.figure.Box;
 import jtetris.figure.Figure;
 
 /**
@@ -50,7 +47,7 @@ public class TetrisController {
 	@GetMapping("/right")
 	public ResponseEntity<Figure> right() {
 		if( this.engine.moveRight() ) {
-			return new ResponseEntity<Figure>(getFallingFigure(), HttpStatus.OK);
+			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
 			return null;
 		}
@@ -59,7 +56,7 @@ public class TetrisController {
 	@GetMapping("/left")
 	public ResponseEntity<Figure> left() {
 		if( this.engine.moveLeft() ) {
-			return new ResponseEntity<Figure>(getFallingFigure(), HttpStatus.OK);
+			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
 			return null;
 		}
@@ -68,7 +65,7 @@ public class TetrisController {
 	@GetMapping("/up")
 	public ResponseEntity<Figure> up() {
 		if( this.engine.rotate(Figure.RIGHT_ROTATION) ) {
-			return new ResponseEntity<Figure>(getFallingFigure(), HttpStatus.OK);
+			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
 			return null;
 		}
@@ -78,7 +75,7 @@ public class TetrisController {
 	@GetMapping("/down")
 	public ResponseEntity<Figure> down() {
 		if( this.engine.rotate(Figure.LEFT_ROTATION) ) {
-			return new ResponseEntity<Figure>(getFallingFigure(), HttpStatus.OK);
+			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
 			return null;
 		}
@@ -87,59 +84,14 @@ public class TetrisController {
 	@GetMapping("/space")
 	public ResponseEntity<Figure> space() {
 		while( this.engine.moveDown() );
-		Figure figureFalling = getFallingFigure();
+		Figure figureFalling = this.engine.getFallingFigureInside();
 		this.engine.figureFell = true; // figure fixed.
 		return new ResponseEntity<Figure>(figureFalling, HttpStatus.OK);
 	}
 	
 	@GetMapping("/board")
 	public ResponseEntity<Board> getBoard() {
-		Board board = new Board();
-		
-		int hashBoard = this.engine.getHash();
-		Figure fallingFigure = getFallingFigure();
-		if( fallingFigure != null ) {
-			fallingFigure.setHashBoard(hashBoard);
-		}
-		
-		board.setHash( hashBoard );
-		board.setRunning( this.engine.isRunning() );
-		board.setPaused( this.engine.isPaused() );
-		board.setFallingFigure( fallingFigure );
-		board.setFiguresFixed( getFigures() );
-		board.setScore( this.engine.getScore() );
-		board.setGameOver( this.engine.isGameOver() );
-		return new ResponseEntity<Board>(board, HttpStatus.OK);
+		return new ResponseEntity<Board>(this.engine.getBoard(), HttpStatus.OK);
 	}
 	
-	private ArrayList<Box> getFigures() {
-		if( !this.engine.isRunning() ) {
-			return null;
-		}
-		
-		ArrayList<Box> boxes = new ArrayList<Box>();
-
-		if( !this.engine.listFigures.isEmpty() ) {
-			ArrayList<Figure> figuras = new ArrayList<Figure>(this.engine.listFigures);
-			figuras.forEach( x -> {
-				boxes.addAll( x.listBoxes );
-			});
-		}
-
-		return boxes;
-	}
-	
-	private Figure getFallingFigure() {
-		if( !this.engine.isRunning() ) {
-			return null;
-		}
-		
-		Figure figureFalling = this.engine.getFigureFalling();
-		if( this.engine.isInsideOnly(figureFalling) ) {
-			return figureFalling;
-		} else {
-			return null;
-		}
-	}
-
 }

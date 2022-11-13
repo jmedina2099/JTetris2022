@@ -5,6 +5,7 @@ import "./score.css";
 
 const Score = () => {
   const context = useContext(ApiServiceContext);
+  const apiService = context.apiService;
   context.score = useState<number>(0);
   const score = context.score[0];
   const setScore = context.score[1];
@@ -14,11 +15,18 @@ const Score = () => {
       console.log('score from rabbitmq = ' + score)
       setScore(score);
     };
-    if( socket ) socket.on('message', scoreListener);
-    return () => {
-      if( socket ) socket.off('message', scoreListener);
+    const boardListener = (board: string) => {
+      const newBoard = JSON.parse(board);
+      console.log('board from rabbitmq = ' + newBoard );
+      apiService.setBoard(context,newBoard,[]);
     };
-  }, [socket,setScore]);
+    if( socket ) socket.on('score', scoreListener);
+    if( socket ) socket.on('board', boardListener);
+    return () => {
+      if( socket ) socket.off('score', scoreListener);
+      if( socket ) socket.off('board', boardListener);
+    };
+  }, [context,apiService,socket,setScore]);
 
   return (
     <div className="scoreLabel">{score}</div>
