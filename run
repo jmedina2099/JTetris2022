@@ -1,4 +1,5 @@
 #!/bin/bash
 
 ./run-back &
-./run-front &
+
+# ./run-front &
