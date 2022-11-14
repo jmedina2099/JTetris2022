@@ -16,6 +16,18 @@ export class Connection {
   sendBoard(board) {
     this.io.sockets.emit('board', board);
   }
+
+  sendHash(hash) {
+    this.io.sockets.emit('hash', hash);
+  }
+
+  sendFigures(figures) {
+    this.io.sockets.emit('figures', figures);
+  }
+
+  sendFigureFalling(figure) {
+    this.io.sockets.emit('figure_falling', figure);
+  }
 }
 
 export function connection(io,socketConection) {

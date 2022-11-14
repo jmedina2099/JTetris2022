@@ -6,7 +6,6 @@ export interface Caja {
   x: number
   y: number
   color: string
-  hash: number
 }
 
 type BoxProps = {

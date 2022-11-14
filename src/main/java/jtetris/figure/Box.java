@@ -46,6 +46,7 @@ public class Box implements Cloneable {
 		this.color = figure.colour.hexaColor;
 	}
 	
+	@JsonIgnore
 	@Override
 	public int hashCode() {
 		return coord.hashCode();
@@ -94,6 +95,7 @@ public class Box implements Cloneable {
 		return coord.toString()+","+color.toString();
 	}
 	
+	@JsonIgnore
 	public int getHash() {
 		return toString().hashCode();
 	}
