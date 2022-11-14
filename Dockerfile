@@ -12,8 +12,10 @@ RUN git clone https://github.com/jmedina2099/JTetris2022.git
 WORKDIR /home/jtetris/JTetris2022
 RUN mvn clean package
 ### ENTRYPOINT ["java","-jar","target/jtetris-0.0.1-SNAPSHOT.jar"]
-ENTRYPOINT ["./run"]
+#RUN bash -c "./run &" && sleep 20
 
 WORKDIR /home/jtetris/JTetris2022/src/main/react
 RUN npm i
-ENTRYPOINT ["npm","start"]
+### ENTRYPOINT ["npm","start"]
+
+CMD bash -c "./run"

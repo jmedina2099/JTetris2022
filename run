@@ -2,4 +2,4 @@
 
 ./run-back &
 
-# ./run-front &
+./run-front
