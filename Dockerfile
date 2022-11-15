@@ -18,4 +18,5 @@ WORKDIR /home/jtetris/JTetris2022/src/main/react
 RUN npm i
 ### ENTRYPOINT ["npm","start"]
 
+WORKDIR /home/jtetris/JTetris2022
 CMD bash -c "./run"
