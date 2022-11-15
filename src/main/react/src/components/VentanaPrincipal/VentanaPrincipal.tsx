@@ -1,4 +1,4 @@
-import { useEffect, useRef, KeyboardEvent, useContext } from 'react';
+import { useEffect, useRef, KeyboardEvent, useContext, useState } from 'react';
 import { ApiServiceContext } from '../../App';
 import PanelLateral from '../PanelLateral/PanelLateral';
 import PanelTetris from '../PanelTetris/PanelTetris';
@@ -9,9 +9,9 @@ const VentanaPrincipal = () => {
   const context = useContext(ApiServiceContext);
   const apiService = context.apiService;
   const setFigureFalling = context.figuraCayendo[1];
-  const [running,setRunning] = context.running;
-  const setPaused = context.paused[1];
-  const hash = context.hash[0];
+  const [running,setRunning] = context.running = useState<boolean>(false);
+  const [,setPaused] = context.paused = useState<boolean>(false);
+  const [hash] = context.hash = useState<number>(0);
   const handleKeyboard = (e: KeyboardEvent): void => {
     switch (e.code) {
       case "Enter":

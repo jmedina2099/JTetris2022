@@ -27,18 +27,16 @@ const renderFigures = ( context : Game ) => {
 
 const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
-  context.cajas = useState<Caja[]>([]);
-  context.figuraCayendo = useState<Figura>();
+  const [running] = context.running;
+  const [paused] = context.paused;
+  const [gameOver] = context.gameOver = useState<boolean>(false);
+  const [,setHash] = context.hash;
+  const [,setBoxes] = context.cajas = useState<Caja[]>([]);
+  const [,setFigureFalling] = context.figuraCayendo = useState<Figura>();
   context.intervalFetch = useState<NodeJS.Timer>();
   const apiService = context.apiService;
   const setBoard = apiService.setBoard;
-  const setBoxes = context.cajas[1];
-  const setFigureFalling = context.figuraCayendo[1];
   const socket = context.socket[0];
-  const setHash = context.hash[1];
-  const running = context.running[0];
-  const paused = context.paused[0];
-  const gameOver = context.gameOver[0];
   useEffect(() => {
     const boardListener = (boardCad: string) => {
       //console.log('board from rabbitmq = ' + boardCad );

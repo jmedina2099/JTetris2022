@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import React, { useState, createContext, useContext, Dispatch } from 'react';
+import React, { createContext, Dispatch } from 'react';
 import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
 import ApiService from './service/ApiService';
@@ -47,11 +47,6 @@ export const ApiServiceContext = createContext<Game>(
 );
 
 function App() {
-  const context = useContext(ApiServiceContext);
-  context.running = useState<boolean>(false);
-  context.paused = useState<boolean>(false);
-  context.gameOver = useState<boolean>(false);
-  context.hash = useState<number>(0);
   return <VentanaPrincipal/>;
 }
 
