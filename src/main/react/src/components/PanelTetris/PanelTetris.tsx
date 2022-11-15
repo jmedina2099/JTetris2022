@@ -1,4 +1,4 @@
-import React, { useContext, useState, KeyboardEvent, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ApiServiceContext, Game } from '../../App';
 import Box, { Caja } from '../Box/Box';
 import Figure, { Figura } from '../Figure/Figure';
@@ -23,34 +23,49 @@ const renderFigures = ( context : Game ) => {
 
 const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
+  context.cajas = useState<Caja[]>([]);
+  context.figuraCayendo = useState<Figura>();
+  context.intervalFetch = useState<NodeJS.Timer>();
+  const apiService = context.apiService;
+  const setBoard = apiService.setBoard;
   const setBoxes = context.cajas[1];
   const setFigureFalling = context.figuraCayendo[1];
-  const apiService = context.apiService;
   const socket = context.socket[0];
-  const [hash,setHash] = context.hash;
+  const setHash = context.hash[1];
+  const running = context.running[0];
+  const paused = context.paused[0];
+  const gameOver = context.gameOver[0];
   useEffect(() => {
     const boardListener = (boardCad: string) => {
-      console.log('board from rabbitmq = ' + boardCad );
-      const board = JSON.parse(boardCad);
-      apiService.setBoard(context,board,[]);
+      //console.log('board from rabbitmq = ' + boardCad );
+      if( running && !paused ) {
+        const board = JSON.parse(boardCad);
+        setBoard(context,board,[]);
+      }
     };
     const hashListener = (hashCad: string) => {
-      console.log('hash from rabbitmq = ' + hashCad );
-      const hash = JSON.parse(hashCad);
-      setHash(hash);
+      //console.log('hash from rabbitmq = ' + hashCad );
+      if( running && !paused ) {
+        const hash = JSON.parse(hashCad);
+        setHash(hash);
+      }
     };
     const figuresListener = (figuresCad: string) => {
-      console.log('figures from rabbitmq = ' + figuresCad );
-      const figures = JSON.parse(figuresCad);
-      if( figures ) {
-        setBoxes(figures);
+      //console.log('figures from rabbitmq = ' + figuresCad );
+      if( running && !paused ) {
+        const figures = JSON.parse(figuresCad);
+        if( figures ) {
+          setBoxes(figures);
+        }
       }
     };
     const figureFallingListener = (figureFallingCad: string) => {
-      console.log('figureFalling from rabbitmq = ' + figureFallingCad );
-      const figureFalling = JSON.parse(figureFallingCad);
-      if( figureFalling ) {
-        setFigureFalling(figureFalling);
+      //console.log('figureFalling from rabbitmq = ' + figureFallingCad );
+      if( running && !paused ) {
+        const figureFalling = JSON.parse(figureFallingCad);
+        if( figureFalling ) {
+          setFigureFalling(figureFalling);
+        }
       }
     };
     if( socket ) socket.on('board', boardListener);
@@ -63,51 +78,15 @@ const PanelTetris = () => {
       if( socket ) socket.off('figures', figuresListener);
       if( socket ) socket.off('figure_falling', figureFallingListener);
     };
-  }, [context,apiService,socket,setHash,setBoxes,setFigureFalling]);
-  const running = context.running[0];
-  const paused = context.paused[0];
-  const gameOver = context.gameOver[0];
-  context.cajas = useState<Caja[]>([]);
-  context.figuraCayendo = useState<Figura>();
-  context.handleKeyboard = (e: KeyboardEvent): void => {
-    switch (e.code) {
-      case "Enter":
-        if( !context.running[0] ) {
-          context.apiService.start(context.running[1],context.paused[1]);
-        } else {
-          context.apiService.pause(context.paused[1],context.running[1]);
-        }
-        break;
-      case "Space":
-        context.apiService.space(context.figuraCayendo[1],hash);
-        break;
-      case "ArrowLeft":
-        context.apiService.left(context.figuraCayendo[1],hash);
-        break;
-      case "ArrowRight":
-        context.apiService.right(context.figuraCayendo[1],hash);
-        break;
-      case "ArrowUp":
-        context.apiService.up(context.figuraCayendo[1],hash);
-        break
-      case "ArrowDown":
-        context.apiService.down(context.figuraCayendo[1],hash);
-        break
-    }
-  }
-  context.intervalFetch = useState<NodeJS.Timer>();
+  }, [context,running,paused,socket,setBoard,setHash,setBoxes,setFigureFalling]);
   useEffect(() => {
     apiService.fetchBoard(context);
   }, [context,apiService,running,paused]);
   if( !running || paused ) {
     if( context.intervalFetch[0] ) clearInterval(context.intervalFetch[0]);
   }
-  const focusDiv : React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if(focusDiv.current) focusDiv.current.focus(); 
-   }, [focusDiv]);
   return (
-    <div className="panelTetris" tabIndex={0} ref={focusDiv} onKeyDown={context.handleKeyboard}>
+    <div className="panelTetris">
       {running?
         (paused? renderPaused(): renderFigures(context)):
         (gameOver? renderGameOver(): "")}

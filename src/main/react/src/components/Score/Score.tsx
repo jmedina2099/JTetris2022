@@ -5,20 +5,23 @@ import "./score.css";
 
 const Score = () => {
   const context = useContext(ApiServiceContext);
-  const apiService = context.apiService;
-  const socket = context.socket[0];
   const [score,setScore] = context.score = useState<number>(0);
+  const socket = context.socket[0];
+  const running = context.running[0];
+  const paused = context.paused[0];  
   useEffect(() => {
     const scoreListener = (scoreCad: string) => {
-      console.log('score from rabbitmq = ' + scoreCad)
-      const score = Number.parseInt(scoreCad);
-      setScore(score);
+      //console.log('score from rabbitmq = ' + scoreCad)
+      if( running && !paused ) {
+        const score = Number.parseInt(scoreCad);
+        setScore(score);
+      }
     };
     if( socket ) socket.on('score', scoreListener);
     return () => {
       if( socket ) socket.off('score', scoreListener);
     };
-  }, [context,apiService,socket,setScore]);
+  }, [running,paused,socket,setScore]);
 
   return (
     <div className="scoreLabel">{score}</div>
