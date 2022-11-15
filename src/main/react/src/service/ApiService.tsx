@@ -38,22 +38,22 @@ export class ApiService {
   setBoard(context : Game, board: Board, idInterval : NodeJS.Timer[]) {
     const setBoxes = context.cajas[1];
     const setFigureFalling = context.figuraCayendo[1];
-    const running = context.running;
-    const paused = context.paused;
-    const gameOver = context.gameOver;
+    const [running,setRunning] = context.running;
+    const [paused,setPaused] = context.paused;
+    const [gameOver,setGameOver] = context.gameOver;
     const [hash,setHash] = context.hash;
     const score = context.score[0];
     const setScore = context.score[1];
-    if( running[0] !== board.running ) {
-      running[1]( board.running );
+    if( running !== board.running ) {
+      setRunning( board.running );
     }
-    if( paused[0] !== board.paused ) {
-      paused[1]( board.paused );
+    if( paused !== board.paused ) {
+      setPaused( board.paused );
     }
-    if( gameOver[0] !== board.gameOver ) {
-      gameOver[1]( board.gameOver );
+    if( gameOver !== board.gameOver ) {
+      setGameOver( board.gameOver );
     }
-    if( hash===0 || hash !== board.hash ) {
+    if( hash !== board.hash ) {
       setHash( board.hash );
     }
     if( board.running && !board.paused ) {
