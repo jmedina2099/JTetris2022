@@ -10,5 +10,8 @@ RUN mvn clean package
 WORKDIR /home/jtetris/JTetris2022/src/main/react
 RUN npm i
 
+WORKDIR /home/jtetris/JTetris2022/src/main/react/src/rabbit-server
+RUN npm i
+
 WORKDIR /home/jtetris/JTetris2022
 CMD bash -c "./run"

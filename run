@@ -2,6 +2,6 @@
 
 ./run-back &
 
-./run-rabbitmq-server &
+(service rabbitmq-server restart && ./run-rabbitmq-server & )
 
 ./run-front
