@@ -41,7 +41,7 @@ export class ApiService {
     const running = context.running;
     const paused = context.paused;
     const gameOver = context.gameOver;
-    const hash = context.hash;
+    const [hash,setHash] = context.hash;
     const score = context.score[0];
     const setScore = context.score[1];
     if( running[0] !== board.running ) {
@@ -53,23 +53,24 @@ export class ApiService {
     if( gameOver[0] !== board.gameOver ) {
       gameOver[1]( board.gameOver );
     }
-    if( !hash[0] || hash[0] !== board.hash ) {
-      hash[1]( board.hash );
+    if( hash===0 || hash !== board.hash ) {
+      setHash( board.hash );
     }
     if( board.running && !board.paused ) {
-      if( board.figuresFixed && Array.isArray(board.figuresFixed) && board.figuresFixed.length > 0 ) {
+      if( board.figuresFixed && Array.isArray(board.figuresFixed) ) {
         setBoxes(board.figuresFixed);
       }
-      if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) && board.fallingFigure.listBoxes.length > 0 ) {
+      if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) ) {
         setFigureFalling(board.fallingFigure);
       }
-      if( board.score && score !== board.score ) {
+      if( score !== board.score ) {
         setScore(board.score);
       }
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
       setBoxes([]);
       setFigureFalling(undefined);
+      setHash(0);
       if( board.paused ) {
         if( score !== board.score ) {
           setScore(board.score);
@@ -115,7 +116,7 @@ export class ApiService {
       axios
       .get<Figura>( SERVERNAME.address+"/space" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
           if( hash === response.data.hashBoard ) {
             setFiguraCayendo(response.data);
           }
@@ -130,7 +131,7 @@ export class ApiService {
       axios
       .get<Figura>( SERVERNAME.address+"/left" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
           if( hash === response.data.hashBoard ) {
             setFiguraCayendo(response.data);
           }
@@ -145,7 +146,7 @@ export class ApiService {
       axios
       .get<Figura>( SERVERNAME.address+"/right" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
           if( hash === response.data.hashBoard ) {
             setFiguraCayendo(response.data);
           }
@@ -160,7 +161,7 @@ export class ApiService {
       axios
       .get<Figura>( SERVERNAME.address+"/up" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
           if( hash === response.data.hashBoard ) {
             setFiguraCayendo(response.data);
           }
@@ -175,7 +176,7 @@ export class ApiService {
       axios
       .get<Figura>( SERVERNAME.address+"/down" )
       .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) && response.data.listBoxes.length > 0 ) {
+        if( response && response.data && Array.isArray(response.data.listBoxes)  ) {
           if( hash === response.data.hashBoard ) {
             setFiguraCayendo(response.data);
           }

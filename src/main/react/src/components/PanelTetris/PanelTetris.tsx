@@ -97,8 +97,8 @@ const PanelTetris = () => {
   }
   context.intervalFetch = useState<NodeJS.Timer>();
   useEffect(() => {
-    context.apiService.fetchBoard(context);
-  }, [context,running,paused]);
+    apiService.fetchBoard(context);
+  }, [context,apiService,running,paused]);
   if( !running || paused ) {
     if( context.intervalFetch[0] ) clearInterval(context.intervalFetch[0]);
   }
