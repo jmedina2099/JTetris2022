@@ -26,7 +26,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/start")
-	public ResponseEntity<Boolean> start() {
+	public synchronized ResponseEntity<Boolean> start() {
 		if( this.engine.running ) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
@@ -36,7 +36,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/pause")
-	public ResponseEntity<Boolean> pause() {
+	public synchronized ResponseEntity<Boolean> pause() {
 		if( !this.engine.running ) {
 			return null;
 		}
@@ -45,7 +45,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/right")
-	public ResponseEntity<Figure> right() {
+	public synchronized ResponseEntity<Figure> right() {
 		if( this.engine.moveRight() ) {
 			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
@@ -54,7 +54,7 @@ public class TetrisController {
 	}	
 
 	@GetMapping("/left")
-	public ResponseEntity<Figure> left() {
+	public synchronized ResponseEntity<Figure> left() {
 		if( this.engine.moveLeft() ) {
 			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
@@ -63,7 +63,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/up")
-	public ResponseEntity<Figure> up() {
+	public synchronized ResponseEntity<Figure> up() {
 		if( this.engine.rotate(Figure.RIGHT_ROTATION) ) {
 			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
@@ -73,7 +73,7 @@ public class TetrisController {
 	}	
 
 	@GetMapping("/down")
-	public ResponseEntity<Figure> down() {
+	public synchronized ResponseEntity<Figure> down() {
 		if( this.engine.rotate(Figure.LEFT_ROTATION) ) {
 			return new ResponseEntity<Figure>(this.engine.getFallingFigureInside(), HttpStatus.OK);
 		} else {
@@ -82,7 +82,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/space")
-	public ResponseEntity<Figure> space() {
+	public synchronized ResponseEntity<Figure> space() {
 		while( this.engine.moveDown() );
 		Figure figureFalling = this.engine.getFallingFigureInside();
 		this.engine.figureFell = true; // figure fixed.
@@ -90,7 +90,7 @@ public class TetrisController {
 	}
 	
 	@GetMapping("/board")
-	public ResponseEntity<Board> getBoard() {
+	public synchronized ResponseEntity<Board> getBoard() {
 		return new ResponseEntity<Board>(this.engine.getBoard(), HttpStatus.OK);
 	}
 	
