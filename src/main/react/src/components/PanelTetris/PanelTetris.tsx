@@ -5,6 +5,10 @@ import Figure, { Figura } from '../Figure/Figure';
 
 import "./panelTetris.css";
 
+const renderHitEnter = () => {
+  return <div className="message"><div className="hitEnterLabel">HIT ENTER</div></div>;
+}
+
 const renderGameOver = () => {
   return <div className="message"><div className="gameOverLabel">GAME OVER</div></div>;
 }
@@ -81,19 +85,17 @@ const PanelTetris = () => {
   }, [context,running,paused,socket,setBoard,setHash,setBoxes,setFigureFalling]);
   useEffect(() => {
     apiService.fetchBoard(context);
+    if( !running || paused ) {
+      if( context.intervalFetch[0] ) clearInterval(context.intervalFetch[0]);
+    }
   }, [context,apiService,running,paused]);
-  if( !running || paused ) {
-    if( context.intervalFetch[0] ) clearInterval(context.intervalFetch[0]);
-  }
   return (
     <div className="panelTetris">
       {running?
         (paused? renderPaused(): renderFigures(context)):
-        (gameOver? renderGameOver(): "")}
+        (gameOver? renderGameOver(): renderHitEnter())}
     </div>
   );
 }
 
 export default PanelTetris;
-
-
