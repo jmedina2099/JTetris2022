@@ -2,4 +2,6 @@
 
 ./run-back &
 
+./run-rabbitmq-server &
+
 ./run-front

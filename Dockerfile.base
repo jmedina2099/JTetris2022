@@ -1,0 +1,7 @@
+FROM openjdk:11
+
+# Install maven
+RUN apt-get update  
+RUN apt-get install -y maven
+RUN apt-get install -y nodejs npm
+RUN apt-get install -y rabbitmq-server

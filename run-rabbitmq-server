@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node src/main/react/src/rabbit-server/index.js
