@@ -1,9 +1,11 @@
-import React, { createContext, Dispatch, useContext,KeyboardEvent } from 'react';
-import { Socket } from 'socket.io-client';
+import React, { createContext, Dispatch, useContext,KeyboardEvent, useState, useEffect } from 'react';
+import io, { Socket } from 'socket.io-client';
 import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
 import ApiService from './service/ApiService';
 import { Figura } from './components/Figure/Figure';
+
+import SERVERNAME from './servername.json'
 
 import './App.css';
 
@@ -40,30 +42,43 @@ export const ApiServiceContext = createContext<Game>(
 
 function App() {
   const context = useContext(ApiServiceContext);
-  const apiService = context.apiService;
+  context.socket = useState<Socket>();
+  const setSocket = context.socket[1];
+  useEffect( () => {
+    const newSocket = io( SERVERNAME.node_rabbitmq_address ,{
+      reconnection: true
+    });
+    newSocket.on('connect_error', err =>  {})
+    newSocket.on('connect_failed', err => {})
+    newSocket.on('disconnect', err => {})
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    };
+  }, [setSocket]);
   const handleKeyboard = (e: KeyboardEvent): void => {
       switch (e.code) {
         case "Enter":
           if( !context.board[0].running ) {
-            apiService.start(context);
+            context.apiService.start(context);
           } else {
-            apiService.pause(context);
+            context.apiService.pause(context);
           }
           break;
         case "Space":
-          apiService.space(context);
+          context.apiService.space(context);
           break;
         case "ArrowLeft":
-          apiService.left(context);
+          context.apiService.left(context);
           break;
         case "ArrowRight":
-          apiService.right(context);
+          context.apiService.right(context);
           break;
         case "ArrowUp":
-          apiService.up(context);
+          context.apiService.up(context);
           break
         case "ArrowDown":
-          apiService.down(context);
+          context.apiService.down(context);
           break
       }
     }

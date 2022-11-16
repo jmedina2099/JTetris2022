@@ -30,52 +30,51 @@ const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
   context.intervalFetch = useState<NodeJS.Timer>();
   const apiService = context.apiService;
-  const socket = context.socket[0];
-  const [board,setBoard] = context.board;
   useEffect(() => {
     const boardListener = (boardCad: string) => {
-      console.log('board from rabbitmq = ' + boardCad );
-      if( board.running && !board.paused ) {
+      //console.log('board from rabbitmq = ' + boardCad );
+      if( context.board[0].running && !context.board[0].paused ) {
         const boardObj = JSON.parse(boardCad);
-        setBoard( boardObj );
+        context.board[1]( boardObj );
       }
     };
     const hashListener = (hashCad: string) => {
-      console.log('hash from rabbitmq = ' + hashCad );
-      if( board.running && !board.paused ) {
+      //console.log('hash from rabbitmq = ' + hashCad );
+      if( context.board[0].running && !context.board[0].paused ) {
         const hash = JSON.parse(hashCad);
-        setBoard( {...board, hash: hash} );
+        context.board[1]( {...context.board[0], hash: hash} );
       }
     };
     const figuresListener = (figuresCad: string) => {
-      console.log('figures from rabbitmq = ' + figuresCad );
-      if( board.running && !board.paused ) {
+      //console.log('figures from rabbitmq = ' + figuresCad );
+      if( context.board[0].running && !context.board[0].paused ) {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
-          setBoard( {...board, figuresFixed: figures} );
+          context.board[1]( {...context.board[0], figuresFixed: figures} );
         }
       }
     };
     const figureFallingListener = (figureFallingCad: string) => {
-      console.log('figureFalling from rabbitmq = ' + figureFallingCad );
-      if( board.running && !board.paused ) {
+      //console.log('figureFalling from rabbitmq = ' + figureFallingCad );
+      if( context.board[0].running && !context.board[0].paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
-          setBoard( {...board, fallingFigure: figureFalling} );
+          context.board[1]( {...context.board[0], fallingFigure: figureFalling} );
         }
       }
     };
-    if( socket ) socket.on('board', boardListener);
-    if( socket ) socket.on('hash', hashListener);
-    if( socket ) socket.on('figures', figuresListener);
-    if( socket ) socket.on('figure_falling', figureFallingListener);
+    if( context.socket[0] ) context.socket[0].on('board', boardListener);
+    if( context.socket[0] ) context.socket[0].on('hash', hashListener);
+    if( context.socket[0] ) context.socket[0].on('figures', figuresListener);
+    if( context.socket[0] ) context.socket[0].on('figure_falling', figureFallingListener);
     return () => {
-      if( socket ) socket.off('board', boardListener);
-      if( socket ) socket.off('hash', hashListener);
-      if( socket ) socket.off('figures', figuresListener);
-      if( socket ) socket.off('figure_falling', figureFallingListener);
+      if( context.socket[0] ) context.socket[0].off('board', boardListener);
+      if( context.socket[0] ) context.socket[0].off('hash', hashListener);
+      if( context.socket[0] ) context.socket[0].off('figures', figuresListener);
+      if( context.socket[0] ) context.socket[0].off('figure_falling', figureFallingListener);
     };
-  }, [context,board,setBoard,board.running,board.paused,socket]);
+  }, [context.board,context.socket]);
+  const [board] = context.board;
   useEffect(() => {
     apiService.fetchBoard(context);
     if( !board.running || board.paused ) {
@@ -84,9 +83,9 @@ const PanelTetris = () => {
   }, [context,apiService,board.running,board.paused]);
   return (
     <div className="panelTetris">
-      {board.running?
-        (board.paused? renderPaused(): renderFigures(context)):
-        (board.gameOver? renderGameOver(): renderHitEnter())}
+      {context.board[0].running?
+        (context.board[0].paused? renderPaused(): renderFigures(context)):
+        (context.board[0].gameOver? renderGameOver(): renderHitEnter())}
     </div>
   );
 }

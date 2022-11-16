@@ -1,8 +1,8 @@
-import SERVERNAME from '../servername.json'
-
 import axios from 'axios';
 import { Board, Game } from '../App';
 import { Figura } from '../components/Figure/Figure';
+
+import SERVERNAME from '../servername.json'
 
 export class ApiService {
   
@@ -18,7 +18,7 @@ export class ApiService {
   getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
     const [board,setBoard] = context.board;
     axios
-    .get<Board>( SERVERNAME.address+"/board" )
+    .get<Board>( SERVERNAME.backend_address+"/board" )
     .then( response => {
       if( response && response.data ) {
         this.setBoardFunc(context,response.data,idInterval);
@@ -35,21 +35,17 @@ export class ApiService {
   setBoardFunc(context : Game, newBoard: Board, idInterval : NodeJS.Timer[]) {
     const [board,setBoard] = context.board;
     if( board.running && !board.paused ) {
-      setBoard({...board,
-        running: newBoard.running, paused: newBoard.paused, gameOver: newBoard.gameOver,
-        figuresFixed: newBoard.figuresFixed, fallingFigure: newBoard.fallingFigure, hash: newBoard.hash,
-        score: newBoard.score });
+      setBoard({...board,...newBoard});
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
-      setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:0,
-        running: newBoard.running, paused: newBoard.paused } );
+      setBoard( {...board, ...newBoard, figuresFixed:[], fallingFigure:undefined, hash:0 } );
     }
   }
 
   start( context : Game ) {
     const [board,setBoard] = context.board;
     axios
-    .get<boolean>( SERVERNAME.address+"/start" )
+    .get<boolean>( SERVERNAME.backend_address+"/start" )
     .then( response => {
       if( response && typeof response.data === "boolean" ) {
         if( board.running !== response.data ) {
@@ -67,7 +63,7 @@ export class ApiService {
   pause( context : Game ) {
     const [board,setBoard] = context.board;
     axios
-    .get<boolean>( SERVERNAME.address+"/pause" )
+    .get<boolean>( SERVERNAME.backend_address+"/pause" )
     .then( response => {
       if( response && typeof response.data === "boolean" ) {
         if( board.paused !== response.data ) {
@@ -83,9 +79,10 @@ export class ApiService {
   doMovement( context : Game, url: string ) {
     const [board,setBoard] = context.board;
     axios
-    .get<Figura>( SERVERNAME.address+url )
+    .get<Figura>( SERVERNAME.backend_address+url )
     .then( response => {
       if( response && response.data && Array.isArray(response.data.listBoxes) ) {
+        // Pinta solamente si el hash del board coincide con el hash de la figura.
         if( board.hash === response.data.hashBoard ) {
           setBoard( {...board, fallingFigure: response.data} );
         }
