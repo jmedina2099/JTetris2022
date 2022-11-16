@@ -7,5 +7,5 @@ cd src/main/react/
 
 # PROD
 npm run build
-yarn add serve
-yarn serve -s build
+yarnpkg add serve
+yarnpkg serve -s build
