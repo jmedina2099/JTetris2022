@@ -1,8 +1,11 @@
 #!/bin/bash
 
+cd src/main/react/
+
 # DEV
-# npm start --prefix src/main/react/
+# npm start
 
 # PROD
-npm run build --prefix src/main/react/
-yarn --cwd src/main/react serve -s build
+npm run build
+yarn add serve
+yarn serve -s build

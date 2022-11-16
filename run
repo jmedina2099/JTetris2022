@@ -1,5 +1,5 @@
 #!/bin/bash
 
-(service rabbitmq-server restart && ./run-back & ./run-rabbitmq-server & )
+(service rabbitmq-server restart && (./run-back &) && (./run-rabbitmq-server &) )
 
 ./run-front
