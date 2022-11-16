@@ -5,4 +5,4 @@ RUN apt-get update
 RUN apt-get install -y maven
 RUN apt-get install -y nodejs npm
 RUN apt-get install -y rabbitmq-server
-RUN apt-get install -y yarn
+RUN apt-get install -y yarnpkg
