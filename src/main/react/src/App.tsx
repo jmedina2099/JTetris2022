@@ -1,22 +1,16 @@
+import React, { createContext, Dispatch, useContext,KeyboardEvent } from 'react';
 import { Socket } from 'socket.io-client';
-import React, { createContext, Dispatch } from 'react';
 import { Caja } from './components/Box/Box';
 import VentanaPrincipal from './components/VentanaPrincipal/VentanaPrincipal';
 import ApiService from './service/ApiService';
+import { Figura } from './components/Figure/Figure';
 
 import './App.css';
-import { Figura } from './components/Figure/Figure';
 
 export interface Game {
   apiService: ApiService
-  running: [boolean,Dispatch<React.SetStateAction<boolean>>]
-  paused: [boolean,Dispatch<React.SetStateAction<boolean>>]
-  gameOver: [boolean,Dispatch<React.SetStateAction<boolean>>]
-  hash: [number,Dispatch<React.SetStateAction<number>>]
-  cajas: [Caja[],Dispatch<React.SetStateAction<Caja[]>>]
-  figuraCayendo: [Figura | undefined,Dispatch<React.SetStateAction<Figura | undefined>>]
+  board: [Board,Dispatch<React.SetStateAction<Board>>]
   intervalFetch: [NodeJS.Timer | undefined, Dispatch<React.SetStateAction<NodeJS.Timer | undefined>>]
-  score: [number,Dispatch<React.SetStateAction<number>>]
   socket: [Socket | undefined,Dispatch<React.SetStateAction<Socket | undefined>>];
 }
 
@@ -26,28 +20,54 @@ export interface Board {
   gameOver: boolean
   hash: number
   figuresFixed: Caja[]
-  fallingFigure: Figura
+  fallingFigure: Figura | undefined
   score: number
 }
+
+export const initialBoard: Board = {
+  running:false, paused:false, gameOver:false, fallingFigure:undefined, figuresFixed:[], score:0, hash:0
+};
 
 const ApiServiceImpl = new ApiService();
 export const ApiServiceContext = createContext<Game>(
   {
     apiService: ApiServiceImpl,
-    running: [false, () => {} ],
-    paused: [false, () => {} ],
-    gameOver: [false, () => {}],
-    hash: [0, () => {}],
-    cajas: [[], () => {}],
-    figuraCayendo: [undefined, () => {}],
+    board: [initialBoard, () => {}],
     intervalFetch: [undefined, () => {}],
-    score: [0, () => {}],
     socket: [undefined, () => {}],
   }
 );
 
 function App() {
-  return <VentanaPrincipal/>;
+  const context = useContext(ApiServiceContext);
+  const apiService = context.apiService;
+  const handleKeyboard = (e: KeyboardEvent): void => {
+      switch (e.code) {
+        case "Enter":
+          if( !context.board[0].running ) {
+            apiService.start(context);
+          } else {
+            apiService.pause(context);
+          }
+          break;
+        case "Space":
+          apiService.space(context);
+          break;
+        case "ArrowLeft":
+          apiService.left(context);
+          break;
+        case "ArrowRight":
+          apiService.right(context);
+          break;
+        case "ArrowUp":
+          apiService.up(context);
+          break
+        case "ArrowDown":
+          apiService.down(context);
+          break
+      }
+    }
+  return <VentanaPrincipal handleKeyboard={handleKeyboard}/>;
 }
 
 export default App;

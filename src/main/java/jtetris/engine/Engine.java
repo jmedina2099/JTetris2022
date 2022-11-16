@@ -97,10 +97,6 @@ public class Engine implements Runnable {
 	}
 	
 	public Figure getFigureFalling() {
-		if( this.figureFell ) {
-			return null;
-		}
-		
 		return this.fallingFigure;
 	}
 
@@ -144,8 +140,8 @@ public class Engine implements Runnable {
 				this.fallingFigure.listBoxes = figureCopy.listBoxes;
 				this.fallingFigure.rotation = figureCopy.rotation;
 				if( this.panelTetris != null ) this.panelTetris.repaint(0);
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}

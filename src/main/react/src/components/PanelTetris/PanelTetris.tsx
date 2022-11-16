@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { ApiServiceContext, Game } from '../../App';
-import Box, { Caja } from '../Box/Box';
-import Figure, { Figura } from '../Figure/Figure';
+import Box from '../Box/Box';
+import Figure from '../Figure/Figure';
 
 import "./panelTetris.css";
 
@@ -18,8 +18,9 @@ const renderPaused = () => {
 } 
 
 const renderFigures = ( context : Game ) => {
-  const figuraCayendo = context.figuraCayendo[0];
-  const cajas = context.cajas[0];
+  const [board] = context.board;
+  const figuraCayendo = board.fallingFigure;
+  const cajas = board.figuresFixed;
   const first = figuraCayendo? <Figure listBoxes={figuraCayendo.listBoxes} hashBoard={figuraCayendo.hashBoard}/>: <></>;
   const second = cajas.map( box => <Box key={box.x+"-"+box.y} caja={box}/> );
   return <>{first}{second}</>
@@ -27,46 +28,40 @@ const renderFigures = ( context : Game ) => {
 
 const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
-  const [running] = context.running;
-  const [paused] = context.paused;
-  const [gameOver] = context.gameOver = useState<boolean>(false);
-  const [,setHash] = context.hash;
-  const [,setBoxes] = context.cajas = useState<Caja[]>([]);
-  const [,setFigureFalling] = context.figuraCayendo = useState<Figura>();
   context.intervalFetch = useState<NodeJS.Timer>();
   const apiService = context.apiService;
-  const setBoard = apiService.setBoard;
   const socket = context.socket[0];
+  const [board,setBoard] = context.board;
   useEffect(() => {
     const boardListener = (boardCad: string) => {
-      //console.log('board from rabbitmq = ' + boardCad );
-      if( running && !paused ) {
-        const board = JSON.parse(boardCad);
-        setBoard(context,board,[]);
+      console.log('board from rabbitmq = ' + boardCad );
+      if( board.running && !board.paused ) {
+        const boardObj = JSON.parse(boardCad);
+        setBoard( boardObj );
       }
     };
     const hashListener = (hashCad: string) => {
-      //console.log('hash from rabbitmq = ' + hashCad );
-      if( running && !paused ) {
+      console.log('hash from rabbitmq = ' + hashCad );
+      if( board.running && !board.paused ) {
         const hash = JSON.parse(hashCad);
-        setHash(hash);
+        setBoard( {...board, hash: hash} );
       }
     };
     const figuresListener = (figuresCad: string) => {
-      //console.log('figures from rabbitmq = ' + figuresCad );
-      if( running && !paused ) {
+      console.log('figures from rabbitmq = ' + figuresCad );
+      if( board.running && !board.paused ) {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
-          setBoxes(figures);
+          setBoard( {...board, figuresFixed: figures} );
         }
       }
     };
     const figureFallingListener = (figureFallingCad: string) => {
-      //console.log('figureFalling from rabbitmq = ' + figureFallingCad );
-      if( running && !paused ) {
+      console.log('figureFalling from rabbitmq = ' + figureFallingCad );
+      if( board.running && !board.paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
-          setFigureFalling(figureFalling);
+          setBoard( {...board, fallingFigure: figureFalling} );
         }
       }
     };
@@ -80,18 +75,18 @@ const PanelTetris = () => {
       if( socket ) socket.off('figures', figuresListener);
       if( socket ) socket.off('figure_falling', figureFallingListener);
     };
-  }, [context,running,paused,socket,setBoard,setHash,setBoxes,setFigureFalling]);
+  }, [context,board,setBoard,board.running,board.paused,socket]);
   useEffect(() => {
     apiService.fetchBoard(context);
-    if( !running || paused ) {
+    if( !board.running || board.paused ) {
       if( context.intervalFetch[0] ) clearInterval(context.intervalFetch[0]);
     }
-  }, [context,apiService,running,paused]);
+  }, [context,apiService,board.running,board.paused]);
   return (
     <div className="panelTetris">
-      {running?
-        (paused? renderPaused(): renderFigures(context)):
-        (gameOver? renderGameOver(): renderHitEnter())}
+      {board.running?
+        (board.paused? renderPaused(): renderFigures(context)):
+        (board.gameOver? renderGameOver(): renderHitEnter())}
     </div>
   );
 }

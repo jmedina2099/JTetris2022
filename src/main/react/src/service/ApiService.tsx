@@ -5,187 +5,116 @@ import { Board, Game } from '../App';
 import { Figura } from '../components/Figure/Figure';
 
 export class ApiService {
+  
+  timeoutFetch : number = 1000;
 
-    getInterval : Function = () => undefined;
-    timeoutFetch : number = 1000;
+  fetchBoard( context : Game ) {
+    const idInterval : NodeJS.Timer[] = [];
+    this.getBoard(context,idInterval);
+    idInterval[0] = setInterval(() => this.getBoard(context,idInterval), this.timeoutFetch);
+    context.intervalFetch[1]( idInterval[0] );
+  }
 
-    fetchBoard( context : Game ) {
-      const idInterval : NodeJS.Timer[] = [];
-      this.getBoard(context,idInterval);
-      idInterval[0] = setInterval(() => this.getBoard(context,idInterval), this.timeoutFetch);
-      context.intervalFetch[1]( idInterval[0] );
-    }
-
-    getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
-      const setBoxes = context.cajas[1];
-      const setFigureFalling = context.figuraCayendo[1];
-      axios
-      .get<Board>( SERVERNAME.address+"/board" )
-      .then( response => {
-        if( response && response.data ) {
-          this.setBoard(context,response.data,idInterval);
-        } else {
-          if( idInterval[0] ) clearInterval(idInterval[0]);
-          setBoxes([]);
-          setFigureFalling(undefined);
-        }
-      })
-      .catch( (error) => {
+  getBoard( context : Game, idInterval : NodeJS.Timer[] ) {
+    const [board,setBoard] = context.board;
+    axios
+    .get<Board>( SERVERNAME.address+"/board" )
+    .then( response => {
+      if( response && response.data ) {
+        this.setBoardFunc(context,response.data,idInterval);
+      } else {
         if( idInterval[0] ) clearInterval(idInterval[0]);
-      });
-    }
+        setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:0} );
+      }
+    })
+    .catch( (error) => {
+      if( idInterval[0] ) clearInterval(idInterval[0]);
+    });
+  }
 
-  setBoard(context : Game, board: Board, idInterval : NodeJS.Timer[]) {
-    const setBoxes = context.cajas[1];
-    const setFigureFalling = context.figuraCayendo[1];
-    const [running,setRunning] = context.running;
-    const [paused,setPaused] = context.paused;
-    const [gameOver,setGameOver] = context.gameOver;
-    const [hash,setHash] = context.hash;
-    const score = context.score[0];
-    const setScore = context.score[1];
-    if( running !== board.running ) {
-      setRunning( board.running );
-    }
-    if( paused !== board.paused ) {
-      setPaused( board.paused );
-    }
-    if( gameOver !== board.gameOver ) {
-      setGameOver( board.gameOver );
-    }
-    if( hash !== board.hash ) {
-      setHash( board.hash );
-    }
+  setBoardFunc(context : Game, newBoard: Board, idInterval : NodeJS.Timer[]) {
+    const [board,setBoard] = context.board;
     if( board.running && !board.paused ) {
-      if( board.figuresFixed && Array.isArray(board.figuresFixed) ) {
-        setBoxes(board.figuresFixed);
-      }
-      if( board.fallingFigure && Array.isArray(board.fallingFigure.listBoxes) ) {
-        setFigureFalling(board.fallingFigure);
-      }
-      if( score !== board.score ) {
-        setScore(board.score);
-      }
+      setBoard({...board,
+        running: newBoard.running, paused: newBoard.paused, gameOver: newBoard.gameOver,
+        figuresFixed: newBoard.figuresFixed, fallingFigure: newBoard.fallingFigure, hash: newBoard.hash,
+        score: newBoard.score });
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
-      setBoxes([]);
-      setFigureFalling(undefined);
-      setHash(0);
-      if( board.paused ) {
-        if( score !== board.score ) {
-          setScore(board.score);
-        }
-      }
+      setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:0,
+        running: newBoard.running, paused: newBoard.paused } );
     }
   }
 
-    start( setRunning : Function, setPaused : Function ) {
-      axios
-      .get<boolean>( SERVERNAME.address+"/start" )
-      .then( response => {
-        if( response && typeof response.data === "boolean" ) {
-          if( response.data ) {
-            setRunning(response.data);
-          }
-        } else {
-          setRunning(false);
-          setPaused(false);
+  start( context : Game ) {
+    const [board,setBoard] = context.board;
+    axios
+    .get<boolean>( SERVERNAME.address+"/start" )
+    .then( response => {
+      if( response && typeof response.data === "boolean" ) {
+        if( board.running !== response.data ) {
+          setBoard( {...board, running: response.data } );
         }
-      })
-      .catch( (error) => {
-        setRunning(false);
-        setPaused(false);
-      });
-    }
+      } else {
+        setBoard( {...board, running: false, paused: false } );
+      }
+    })
+    .catch( (error) => {
+      setBoard( {...board, running: false, paused: false } );
+    });
+  }
 
-    pause( setPaused : Function, setRunning : Function ) {
-      axios
-      .get<boolean>( SERVERNAME.address+"/pause" )
-      .then( response => {
-        if( response && typeof response.data === "boolean" ) {
-          setPaused(response.data);
+  pause( context : Game ) {
+    const [board,setBoard] = context.board;
+    axios
+    .get<boolean>( SERVERNAME.address+"/pause" )
+    .then( response => {
+      if( response && typeof response.data === "boolean" ) {
+        if( board.paused !== response.data ) {
+          setBoard( {...board, paused: response.data} );
         }
-      })
-      .catch( (error) => {
-        setRunning(false);
-        setPaused(false);
-      });
-    }
+      }
+    })
+    .catch( (error) => {
+      setBoard( {...board, running: false, paused: false } );
+    });
+  }
 
-    space( setFiguraCayendo : Function, hash : number ) {
-      axios
-      .get<Figura>( SERVERNAME.address+"/space" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
-          if( hash === response.data.hashBoard ) {
-            setFiguraCayendo(response.data);
-          }
+  doMovement( context : Game, url: string ) {
+    const [board,setBoard] = context.board;
+    axios
+    .get<Figura>( SERVERNAME.address+url )
+    .then( response => {
+      if( response && response.data && Array.isArray(response.data.listBoxes) ) {
+        if( board.hash === response.data.hashBoard ) {
+          setBoard( {...board, fallingFigure: response.data} );
         }
-      })
-      .catch( (error) => {
-        setFiguraCayendo([]);
-      });
-    }
+      }
+    })
+    .catch( (error) => {
+      setBoard( {...board, fallingFigure: undefined} );
+    });
+  }
 
-    left( setFiguraCayendo : Function, hash : number ) {
-      axios
-      .get<Figura>( SERVERNAME.address+"/left" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
-          if( hash === response.data.hashBoard ) {
-            setFiguraCayendo(response.data);
-          }
-        }
-      })
-      .catch( (error) => {
-        setFiguraCayendo([]);
-      });
-    }
+  space( context : Game ) {
+    this.doMovement( context, "/space" );
+  }
 
-    right( setFiguraCayendo : Function, hash : number ) {
-      axios
-      .get<Figura>( SERVERNAME.address+"/right" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
-          if( hash === response.data.hashBoard ) {
-            setFiguraCayendo(response.data);
-          }
-        }
-      })
-      .catch( (error) => {
-        setFiguraCayendo([]);
-      });
-    }
+  left( context : Game ) {
+    this.doMovement( context, "/left" );
+  }
+  
+  right( context : Game ) {
+    this.doMovement( context, "/right" );
+  }
 
-    up( setFiguraCayendo : Function, hash : number) {
-      axios
-      .get<Figura>( SERVERNAME.address+"/up" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes) ) {
-          if( hash === response.data.hashBoard ) {
-            setFiguraCayendo(response.data);
-          }
-        }
-      })
-      .catch( (error) => {
-        setFiguraCayendo([]);
-      });
-    }
+  up( context : Game ) {
+    this.doMovement( context, "/up" );
+  }
 
-    down( setFiguraCayendo : Function, hash : number) {
-      axios
-      .get<Figura>( SERVERNAME.address+"/down" )
-      .then( response => {
-        if( response && response.data && Array.isArray(response.data.listBoxes)  ) {
-          if( hash === response.data.hashBoard ) {
-            setFiguraCayendo(response.data);
-          }
-        }
-      })
-      .catch( (error) => {
-        setFiguraCayendo([]);
-      });
-    }
+  down( context : Game ) {
+    this.doMovement( context, "/down" );
+  }
 
 }
 

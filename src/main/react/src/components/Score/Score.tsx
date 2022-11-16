@@ -1,30 +1,27 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { ApiServiceContext } from '../../App';
 
 import "./score.css";
 
 const Score = () => {
   const context = useContext(ApiServiceContext);
-  const [score,setScore] = context.score = useState<number>(0);
+  const [board,setBoard] = context.board;
   const socket = context.socket[0];
-  const running = context.running[0];
-  const paused = context.paused[0];  
   useEffect(() => {
     const scoreListener = (scoreCad: string) => {
-      //console.log('score from rabbitmq = ' + scoreCad)
-      if( running && !paused ) {
+      console.log('score from rabbitmq = ' + scoreCad );
+      if( board.running && !board.paused ) {
         const score = Number.parseInt(scoreCad);
-        setScore(score);
+        setBoard( {...board, score:score} );
       }
     };
     if( socket ) socket.on('score', scoreListener);
     return () => {
       if( socket ) socket.off('score', scoreListener);
     };
-  }, [running,paused,socket,setScore]);
-
+  }, [board,setBoard,socket]);
   return (
-    <div className="scoreLabel">{score}</div>
+    <div className="scoreLabel">{context.board[0].score}</div>
   );
 }
 
