@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd src/main/angular/
+
+# DEV
+ng serve
+
+# PROD
+# ng build
+# lite-server --base-dir "dist/tetris-angular"
