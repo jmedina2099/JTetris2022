@@ -1,5 +1,5 @@
 *********** JTetris2022
-*********** Tetris - Back in Java and Front in React
+*********** Tetris - Back in Java and Front in React and also inAngular
 
 ./run
 
