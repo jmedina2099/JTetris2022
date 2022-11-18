@@ -3,7 +3,7 @@
 cd src/main/angular/
 
 # DEV
-ng serve
+ng serve --host 0.0.0.0
 
 # PROD
 # ng build
