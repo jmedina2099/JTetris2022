@@ -6,3 +6,12 @@
         <app-box [caja]="box"></app-box>
     </div>
 </div>
+<div class="message" *ngIf="!board.running && !board.gameOver">
+    <div class="hitEnterLabel">HIT ENTER</div>
+</div>
+<div class="message" *ngIf="board.running && board.paused">
+    <div class="pausedLabel">PAUSED</div>
+</div>
+<div class="message" *ngIf="board.gameOver">
+    <div class="gameOverLabel">GAME OVER</div>
+</div>

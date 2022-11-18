@@ -1,0 +1,6 @@
+.score {
+    position: relative;
+    border: 1px solid white;
+    width: 100px;
+    height: 50px;
+}

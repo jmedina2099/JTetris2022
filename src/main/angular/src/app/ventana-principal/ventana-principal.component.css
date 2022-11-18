@@ -4,4 +4,11 @@
     width: 200px;
     height: 400px;
     background-color: black;
-  }
+}
+
+.panel-lateral {
+    position: relative;
+    /*border: 1px solid white;*/
+    width: 100px;
+    height: 400px;
+}

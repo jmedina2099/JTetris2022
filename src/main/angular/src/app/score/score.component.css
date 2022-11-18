@@ -1,0 +1,8 @@
+.scoreLabel {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-family: "Liberation Serif", serif;
+    font-size: 16px;
+    font-weight: bold;
+}
