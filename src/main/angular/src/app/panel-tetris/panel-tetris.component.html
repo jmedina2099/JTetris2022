@@ -1,0 +1,8 @@
+<div *ngIf="board.running && !board.paused">
+    <div *ngFor="let box of fallingFigure?.listBoxes">
+        <app-box [caja]="box"></app-box>
+    </div>
+    <div *ngFor="let box of figuresFixed">
+        <app-box [caja]="box"></app-box>
+    </div>
+</div>

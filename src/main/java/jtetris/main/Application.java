@@ -14,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan({ "jtetris.api", "jtetris.engine" })
 public class Application {
 	
-	private int port = 3000;	
+	private int portReact = 3000;
+	private int portAngular = 4200;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -37,7 +38,12 @@ public class Application {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:"+port,"http://" + getExternalIP() +":"+port,"http://13.52.252.10:"+port);
+                registry.addMapping("/**")
+                .allowedOrigins(
+                		"http://localhost:"+portReact,
+                		"http://" + getExternalIP() +":"+portReact,
+                		"http://localhost:"+portAngular,
+                		"http://" + getExternalIP() +":"+portAngular);
             }
         };
     }
