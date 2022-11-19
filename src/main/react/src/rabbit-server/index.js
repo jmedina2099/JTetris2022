@@ -34,7 +34,9 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         });
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
         channel.consume(queue, function(msg) {
-            socketConection[0].sendScore(msg.content.toString());
+            if( socketConection[0] ) {
+                socketConection[0].sendScore(msg.content.toString());
+            }
         }, {
             noAck: true
         });
@@ -49,7 +51,9 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         });
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
         channel.consume(queue, function(msg) {
-            socketConection[0].sendBoard(msg.content.toString());
+            if( socketConection[0] ) {
+                socketConection[0].sendBoard(msg.content.toString());
+            }
         }, {
             noAck: true
         });
@@ -64,7 +68,9 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         });
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
         channel.consume(queue, function(msg) {
-            socketConection[0].sendHash(msg.content.toString());
+            if( socketConection[0] ) {
+                socketConection[0].sendHash(msg.content.toString());
+            }
         }, {
             noAck: true
         });
@@ -79,7 +85,9 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         });
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
         channel.consume(queue, function(msg) {
-            socketConection[0].sendFigures(msg.content.toString());
+            if( socketConection[0] ) {
+                socketConection[0].sendFigures(msg.content.toString());
+            }
         }, {
             noAck: true
         });
@@ -94,7 +102,9 @@ amqp.connect('amqp://localhost', function(error0, connection) {
         });
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
         channel.consume(queue, function(msg) {
-            socketConection[0].sendFigureFalling(msg.content.toString());
+            if( socketConection[0] ) {
+                socketConection[0].sendFigureFalling(msg.content.toString());
+            }
         }, {
             noAck: true
         });

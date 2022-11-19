@@ -3,8 +3,8 @@
 cd src/main/angular/
 
 # DEV
-ng serve --host 0.0.0.0
+# ng serve --host 0.0.0.0
 
 # PROD
-# ng build
-# lite-server --base-dir "dist/tetris-angular"
+ng build
+lite-server --base-dir "dist/tetris-angular"
