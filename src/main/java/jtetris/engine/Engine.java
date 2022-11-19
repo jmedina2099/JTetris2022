@@ -265,14 +265,11 @@ public class Engine implements Runnable {
 						this.running = false;
 					}
 					if( this.sendToQueue != null ) {
-						int hash = getHash();
-						this.sendToQueue.sendHashBoard( hash );
-						this.sendToQueue.sendFiguras( getFiguresBoxes() );
-						Figure figureFalling = getFallingFigureInside();
-						if( figureFalling != null ) {
-							figureFalling.setHashBoard( hash );
-							this.sendToQueue.sendFiguraCayendo( figureFalling );
-						}
+						Board board = getBoard();
+						this.sendToQueue.sendHashBoard( board.getHash() );
+						this.sendToQueue.sendFiguras( board.getFiguresFixed() );
+						this.sendToQueue.sendFiguraCayendo( board.getFallingFigure() );
+						this.sendToQueue.sendBoard( board );
 					}
 				}
 			}
