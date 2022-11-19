@@ -1,5 +1,5 @@
 src/main/react/node_modules
 src/main/react/build
 target
-src/main/react/src/rabbit-server/node_modules
 src/main/tetris-angular/node_modules
+src/main/rabbit-server/node_modules

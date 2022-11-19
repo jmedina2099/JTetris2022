@@ -9,4 +9,4 @@ cd src/main/angular/
 ng build
 
 cd dist/tetris-angular
-lite-server
+lite-server -c ../../bs-config.json
