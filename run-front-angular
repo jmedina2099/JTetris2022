@@ -7,4 +7,6 @@ cd src/main/angular/
 
 # PROD
 ng build
-lite-server --base-dir "dist/tetris-angular"
+
+cd dist/tetris-angular
+lite-server
