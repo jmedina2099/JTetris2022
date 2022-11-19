@@ -63,7 +63,7 @@ const PanelTetris = () => {
         }
       }
     };
-    if( context.socket[0] ) context.socket[0].on('board', boardListener);
+    //if( context.socket[0] ) context.socket[0].on('board', boardListener);
     if( context.socket[0] ) context.socket[0].on('hash', hashListener);
     if( context.socket[0] ) context.socket[0].on('figures', figuresListener);
     if( context.socket[0] ) context.socket[0].on('figure_falling', figureFallingListener);
