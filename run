@@ -1,5 +1,13 @@
 #!/bin/bash
 
-(service rabbitmq-server restart && (./run-back &) && (./run-rabbitmq-server &) )
+(service rabbitmq-server restart && (./run-back &) && (./run-rabbitmq-server &) );
 
-./run-front-angular
+for args in "$@"
+do
+	if [ "$1" == "angular" ]; then
+		./run-front-angular;
+	fi
+	if [ "$1" == "react" ]; then
+		./run-front-react;
+	fi
+done

@@ -17,4 +17,4 @@ WORKDIR /home/jtetris/JTetris2022/src/main/angular
 RUN npm i
 
 WORKDIR /home/jtetris/JTetris2022
-CMD bash -c "./run"
+ENTRYPOINT ["./run"]
