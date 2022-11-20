@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@ComponentScan({ "jtetris.api", "jtetris.engine" })
+@ComponentScan({ "jtetris.api", "jtetris.engine", "org.azrael.hash" })
 public class Application {
 	
 	private int portReact = 3000;

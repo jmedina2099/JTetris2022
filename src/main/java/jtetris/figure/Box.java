@@ -97,7 +97,7 @@ public class Box implements Cloneable {
 	
 	@JsonIgnore
 	public int getHash() {
-		return toString().hashCode();
+		return this.engine.getFuncionHash().hashCode( toString() );
 	}
 
 	public void clearBox() {

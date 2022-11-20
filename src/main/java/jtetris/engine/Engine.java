@@ -3,6 +3,7 @@ package jtetris.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.azrael.hash.ComputeHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,9 @@ public class Engine implements Runnable {
 	
 	@Autowired
 	private SendToQueue sendToQueue;
+	
+	@Autowired
+	private ComputeHash funcionHash;	
 
 	public boolean figureFell = false;
 
@@ -84,6 +88,10 @@ public class Engine implements Runnable {
 	public int getScore() {
 		return this.score;
 	}
+	
+	public ComputeHash getFuncionHash() {
+		return funcionHash;
+	}	
 
 	public void doStart() {
 		this.thread = new Thread( this );
