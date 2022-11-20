@@ -11,5 +11,7 @@ RUN apt update -y
 RUN apt install nodejs -y
 
 RUN npm install -g yarn
+RUN yarn global add serve
+
 RUN npm install -g @angular/cli
 RUN npm install -g lite-server
