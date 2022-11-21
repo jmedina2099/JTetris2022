@@ -7,6 +7,8 @@ import http from "http";
 import amqp from 'amqplib/callback_api.js';
 import cors from 'cors';
 
+var port = 4000;
+
 var app = express();
 app.use(cors());
 var server = http.createServer(app);
@@ -16,11 +18,13 @@ var io = new Server(server,{
     methods: ['GET', 'POST']
   }
 });
-server.listen(4000);
+server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
 
-amqp.connect('amqp://localhost', function(error0, connection) {
+var rabbitHost = 'jtetrisapp.azurewebsites.net';
+
+amqp.connect('amqp://'+rabbitHost, function(error0, connection) {
     if (error0) {
         throw error0;
     }

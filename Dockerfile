@@ -18,5 +18,7 @@ RUN if [ "$front" = "react" -o "$front" = "react-angular" ]; then npm i; fi
 WORKDIR /home/jtetris/JTetris2022/src/main/angular
 RUN if [ "$angular" = "angular" -o "$front" = "react-angular" ]; then npm i; fi
 
+EXPOSE 3000 4000 4200 8080
+
 WORKDIR /home/jtetris/JTetris2022
 ENTRYPOINT ["./run"]

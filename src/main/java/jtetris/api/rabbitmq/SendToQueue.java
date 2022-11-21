@@ -26,10 +26,13 @@ public class SendToQueue {
 	private final static String FIGURE_FALLING_QUEUE = "figure-falling-queue";
 
 	private ConnectionFactory factory;
+	
+	//private String url = "localhost";
+	private String url = "jtetrisapp.azurewebsites.net";
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
-		this.factory.setHost("localhost");
+		this.factory.setHost(url);
 	}
 
 	public void sendScore(int score) {
@@ -38,7 +41,9 @@ public class SendToQueue {
 			String message = ""+score;
 			channel.basicPublish("", SCORE_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -49,7 +54,9 @@ public class SendToQueue {
 			String message = mapper.writeValueAsString(board);
 			channel.basicPublish("", BOARD_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 		}
 	}	
 
@@ -60,7 +67,9 @@ public class SendToQueue {
 			String message = mapper.writeValueAsString(hashBoard);
 			channel.basicPublish("", HASH_BOARD_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 		}
 	}	
 
@@ -71,7 +80,9 @@ public class SendToQueue {
 			String message = mapper.writeValueAsString(figuresBoxes);
 			channel.basicPublish("", FIGURES_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 		}
 	}	
 
@@ -82,7 +93,9 @@ public class SendToQueue {
 			String message = mapper.writeValueAsString(figuraCayendo);
 			channel.basicPublish("", FIGURE_FALLING_QUEUE, null, message.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 		}
 	}	
 

@@ -1,4 +1,4 @@
 {
-    "backend_address": "http://localhost:8080",
-    "node_rabbitmq_address": "http://localhost:4000"
+    "backend_address": "http://jtetrisapp.azurewebsites.net:8080",
+    "node_rabbitmq_address": "http://jtetrisapp.azurewebsites.net:4000"
 }
