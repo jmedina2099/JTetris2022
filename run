@@ -2,12 +2,12 @@
 
 (service rabbitmq-server restart && (./run-back &) && (./run-rabbitmq-server &) );
 
-if [ "$1" == "react" ]; then
+#if [ "$1" == "react" ]; then
 	./run-front-react;
-fi
-if [ "$1" == "angular" ]; then
-	./run-front-angular;
-fi
-if [ "$1" == "react-angular" ]; then
-	(./run-front-react &) && (./run-front-angular);
-fi
+#fi
+#if [ "$1" == "angular" ]; then
+#	./run-front-angular;
+#fi
+#if [ "$1" == "react-angular" ]; then
+#	(./run-front-react &) && (./run-front-angular);
+#fi
