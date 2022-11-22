@@ -42,6 +42,8 @@ public class Application {
                 .allowedOrigins(
                 		"http://localhost:"+portReact,
                 		"http://" + getExternalIP() +":"+portReact,
+						"http://jtetrisappreact.azurewebsites.net",
+						"https://jtetrisappreact.azurewebsites.net",
                 		"http://localhost:"+portAngular,
                 		"http://" + getExternalIP() +":"+portAngular);
             }
