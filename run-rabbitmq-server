@@ -8,6 +8,9 @@ rabbitmqctl add_user "jmedina" "jmedina"
 rabbitmqctl set_permissions -p / "jmedina" ".*" ".*" ".*"
 rabbitmqctl set_user_tags "jmedina" administrator
 
+echo "Stoping rabbit server..."
+service rabbitmq-server stop
+
 echo "Running the broker..."
 /usr/lib/rabbitmq/bin/rabbitmq-server
 
