@@ -1,3 +1,4 @@
 #!/bin/bash
 
+echo "* Running spring-boot.. *"
 mvn spring-boot:run
