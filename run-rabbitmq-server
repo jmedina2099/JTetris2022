@@ -1,5 +1,14 @@
 #!/bin/bash
 
-#service rabbitmq-server restart
+echo "Restarting rabbit server..."
+service rabbitmq-server restart
 
+echo "Adding user to rabbit..."
+rabbitmqctl add_user "jmedina" "jmedina"
+rabbitmqctl set_permissions -p / "jmedina" ".*" ".*" ".*"
+rabbitmqctl set_user_tags "jmedina" administrator
+
+echo "Running the broker..."
 /usr/lib/rabbitmq/bin/rabbitmq-server
+
+echo "END of ./run-rabbitmq-server"
