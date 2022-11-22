@@ -28,11 +28,12 @@ public class SendToQueue {
 	private ConnectionFactory factory;
 	
 	//private String url = "localhost";
-	private String url = "jtetrisapp.azurewebsites.net";
+	private String url = "jtetrisapprabbitmqserver.azurewebsites.net";
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
 		this.factory.setHost(url);
+		this.factory.setPort(443);
 	}
 
 	public void sendScore(int score) {

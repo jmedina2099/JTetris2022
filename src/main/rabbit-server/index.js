@@ -22,7 +22,7 @@ server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
 
-var rabbitHost = 'jtetrisapp.azurewebsites.net';
+var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 amqp.connect('amqp://'+rabbitHost, function(error0, connection) {
     if (error0) {
