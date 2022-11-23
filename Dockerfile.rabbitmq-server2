@@ -1,0 +1,15 @@
+FROM rabbitmq:3.8-management
+
+RUN apt-get update
+RUN apt-get install -y ca-certificates
+
+RUN mkdir -p /etc/rabbitmq/certs
+COPY certs/* /etc/rabbitmq/certs/
+
+RUN mkdir -p /usr/local/share/ca-certificates
+COPY ca-certs/* /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
+COPY config/rabbitmq.conf /etc/rabbitmq/
+
+EXPOSE 5672
