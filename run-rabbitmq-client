@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Starting ssh server..."
+service ssh start
+
 echo "Running rabbitmq client..."
 cd src/main/rabbit-server
 node index.js

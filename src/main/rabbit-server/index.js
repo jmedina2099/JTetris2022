@@ -39,8 +39,9 @@ var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 var opts = {
     cert: fs.readFileSync(path.resolve( './', './client.crt')),
-    key: fs.readFileSync(path.resolve( './', './client.key')),
-    ca: [fs.readFileSync(path.resolve( './', './serverca.crt')),
+    key:  fs.readFileSync(path.resolve( './', './client.key')),
+    ca: [fs.readFileSync(path.resolve( './', './autoridad1.crt')),
+         fs.readFileSync(path.resolve( './', './autoridad2.crt')),
          fs.readFileSync(path.resolve( './', './azureca1.pem')),
          fs.readFileSync(path.resolve( './', './azureca2.pem'))]
 };

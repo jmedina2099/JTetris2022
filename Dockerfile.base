@@ -1,17 +1,42 @@
 FROM openjdk:11
 
-# Install maven
 RUN apt-get update  
+
+# Install maven
 RUN apt-get install -y maven
-# RUN apt-get install -y nodejs npm
+
+# Install rabbitmq
 RUN apt-get install -y rabbitmq-server
 
+# Install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash
 RUN apt update -y
 RUN apt install nodejs -y
 
+# Install yarn & serve
 RUN npm install -g yarn
 RUN yarn global add serve
 
+# Install angular & lite-server
 RUN npm install -g @angular/cli
 RUN npm install -g lite-server
+
+# Install ca-certs
+RUN mkdir -p /usr/local/share/ca-certificates
+COPY ca-certs/* /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
+# Install ssh server
+RUN apt-get install -y --no-install-recommends openssh-server \
+&& echo "root:Docker!" | chpasswd
+
+# Copy the sshd_config file to the /etc/ssh/ directory
+COPY config/sshd_config /etc/ssh/
+
+# Copy and configure the ssh_setup file
+RUN mkdir -p /tmp
+COPY config/ssh_setup.sh /tmp
+RUN chmod +x /tmp/ssh_setup.sh \
+    && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
+
+
