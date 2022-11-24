@@ -11,6 +11,14 @@ import path from 'path';
 
 var port = 4000;
 
+const app = express();
+app.get('/.well-known/pki-validation/386ABA2CD06A6CBD2B1669C0BEB859F5.txt', (req, res) => {
+    const filename = path.resolve( './', './386ABA2CD06A6CBD2B1669C0BEB859F5.txt')
+    res.download(filename);
+});
+app.listen(port, () => console.log(`Started server at http://localhost:4000!`));
+
+/*
 var app = express();
 app.use(cors());
 var server = http.createServer(app);
@@ -23,6 +31,7 @@ var io = new Server(server,{
 server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
+*/
 
 //var rabbitHost = 'localhost:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
