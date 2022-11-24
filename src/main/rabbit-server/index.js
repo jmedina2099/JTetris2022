@@ -35,7 +35,7 @@ server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
 
-var rabbitHost = 'localhost:5672';
+var rabbitHost = '127.0.0.1:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
