@@ -4,12 +4,10 @@ RUN mkdir -p /home/jtetris
 WORKDIR /home/jtetris
 RUN git clone https://github.com/jmedina2099/JTetris2022.git
 
-RUN echo "loopback_users = none" > /etc/rabbitmq/rabbitmq.conf
-RUN echo "auth_mechanisms.1 = PLAIN" >> /etc/rabbitmq/rabbitmq.conf
-RUN echo "auth_mechanisms.2 = AMQPLAIN" >> /etc/rabbitmq/rabbitmq.conf
-RUN echo "auth_mechanisms.3 = EXTERNAL" >> /etc/rabbitmq/rabbitmq.conf
-RUN echo "ssl_options.verify = verify_none" >> /etc/rabbitmq/rabbitmq.conf
-RUN echo "ssl_options.fail_if_no_peer_cert = false" >> /etc/rabbitmq/rabbitmq.conf
+RUN mkdir -p /etc/rabbitmq/certs
+COPY certs/* /etc/rabbitmq/certs/
+
+COPY config/rabbitmq.conf /etc/rabbitmq/
 
 EXPOSE 5672
 
