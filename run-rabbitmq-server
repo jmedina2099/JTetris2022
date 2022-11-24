@@ -4,9 +4,10 @@
 service rabbitmq-server restart
 
 #echo "Adding user to rabbit..."
-rabbitmqctl add_user jmedina jmedina
-rabbitmqctl set_permissions -p / jmedina ".*" ".*" ".*"
-rabbitmqctl set_user_tags jmedina administrator
+rabbitmqctl add_user 'jmedina' 'jmedina'
+rabbitmqctl set_permissions -p '/' 'jmedina' '.*' '.*' '.*'
+rabbitmqctl set_user_tags 'jmedina' 'administrator'
+rabbitmqctl list_users
 
 #echo "Stoping rabbit server..."
 service rabbitmq-server stop
