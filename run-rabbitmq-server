@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #echo "Restarting rabbit server..."
-#service rabbitmq-server restart
+service rabbitmq-server restart
 
 #echo "Adding user to rabbit..."
-#rabbitmqctl add_user jmedina jmedina
-#rabbitmqctl set_permissions -p / jmedina ".*" ".*" ".*"
-#rabbitmqctl set_user_tags jmedina administrator
+rabbitmqctl add_user jmedina jmedina
+rabbitmqctl set_permissions -p / jmedina ".*" ".*" ".*"
+rabbitmqctl set_user_tags jmedina administrator
 
 #echo "Stoping rabbit server..."
-#service rabbitmq-server stop
+service rabbitmq-server stop
 
 echo "Starting ssh server..."
 service ssh start

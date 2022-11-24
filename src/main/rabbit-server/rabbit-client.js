@@ -20,7 +20,7 @@ var opts = {
 console.log( 'Trying to connect to rabbitmq...' );
 
 //amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
-amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
+amqp.connect('amqp://jmedina:jmedina@'+rabbitHost, function(error0, connection) {
     console.log( 'Answering..' );
     if (error0) {
         throw error0;
