@@ -35,7 +35,7 @@ server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
 
-var rabbitHost = '127.0.0.1:5672';
+var rabbitHost = 'localhost:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
@@ -60,6 +60,7 @@ var opts = {
          fs.readFileSync(path.resolve( './', './azureca2.pem'))]
 };
 
+/*
 console.log( 'Connecting to rabbitmq...' );
 amqp.connect(urlObj, opts, function(error0, connection) {
     console.log( 'Answering..' );
@@ -153,3 +154,4 @@ amqp.connect(urlObj, opts, function(error0, connection) {
         });
     });
 });
+*/
