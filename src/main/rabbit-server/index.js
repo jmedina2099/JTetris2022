@@ -40,7 +40,7 @@ var rabbitHost = 'localhost:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 var urlObj = {
-    protocol: 'amqps',
+    protocol: 'amqp',
     hostname: 'jtetrisapprabbitmqserver.azurewebsites.net',
     port: 80,
     username: 'jmedina',
@@ -61,7 +61,7 @@ var opts = {
 };
 
 console.log( 'Connecting to rabbitmq...' );
-amqp.connect(urlObj, opts, function(error0, connection) {
+amqp.connect(urlObj, function(error0, connection) {
     console.log( 'Answering..' );
     if (error0) {
         throw error0;
