@@ -11,14 +11,15 @@ import path from 'path';
 
 var port = 4000;
 
+/*
 const app = express();
 app.get('/.well-known/pki-validation/E09C9F9EDF3AEAB5DD155570E4244C55.txt', (req, res) => {
     const filename = path.resolve( './', './E09C9F9EDF3AEAB5DD155570E4244C55.txt')
     res.download(filename);
 });
 app.listen(port, () => console.log(`Started server at http://localhost:4000!`));
+*/
 
-/*
 var app = express();
 app.use(cors());
 var server = http.createServer(app);
@@ -32,9 +33,9 @@ server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
 
-var rabbitHost = 'localhost:5672';
+//var rabbitHost = 'localhost:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
-//var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
+var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 var opts = {
     cert: fs.readFileSync(path.resolve( './', './client.crt')),
@@ -46,9 +47,11 @@ var opts = {
 
 amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
 //amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
+    console.log( 'Entering connecting..' );
     if (error0) {
         throw error0;
     }
+    console.log( 'No errors..' );
     connection.createChannel(function(error1, channel) {
         if (error1) {
             throw error1;
@@ -135,5 +138,3 @@ amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connectio
         });
     });
 });
-
-*/
