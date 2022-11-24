@@ -5,4 +5,5 @@ service ssh start
 
 echo "Running rabbitmq client..."
 cd src/main/rabbit-server
+node rabbit-client.js &
 node index.js
