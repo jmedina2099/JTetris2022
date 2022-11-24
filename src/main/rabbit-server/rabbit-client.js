@@ -5,8 +5,8 @@ import fs from 'fs';
 import path from 'path';
 
 //var rabbitHost = 'localhost:5672';
-//var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
-var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
+var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
+//var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 var opts = {
     cert: fs.readFileSync(path.resolve( './', './client.crt')),
@@ -19,8 +19,8 @@ var opts = {
 
 console.log( 'Trying to connect to rabbitmq...' );
 
-amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
-//amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
+//amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
+amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
     console.log( 'Answering..' );
     if (error0) {
         throw error0;
