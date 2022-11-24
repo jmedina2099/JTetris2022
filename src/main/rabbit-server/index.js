@@ -12,8 +12,8 @@ import path from 'path';
 var port = 4000;
 
 const app = express();
-app.get('/.well-known/pki-validation/386ABA2CD06A6CBD2B1669C0BEB859F5.txt', (req, res) => {
-    const filename = path.resolve( './', './386ABA2CD06A6CBD2B1669C0BEB859F5.txt')
+app.get('/.well-known/pki-validation/E09C9F9EDF3AEAB5DD155570E4244C55.txt', (req, res) => {
+    const filename = path.resolve( './', './E09C9F9EDF3AEAB5DD155570E4244C55.txt')
     res.download(filename);
 });
 app.listen(port, () => console.log(`Started server at http://localhost:4000!`));
@@ -31,11 +31,10 @@ var io = new Server(server,{
 server.listen(port);
 var socketConection = [];
 connection(io,socketConection);
-*/
 
-//var rabbitHost = 'localhost:5672';
+var rabbitHost = 'localhost:5672';
 //var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:80';
-var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
+//var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net:443';
 
 var opts = {
     cert: fs.readFileSync(path.resolve( './', './client.crt')),
@@ -45,7 +44,6 @@ var opts = {
          fs.readFileSync(path.resolve( './', './azureca2.pem'))]
 };
 
-/*
 amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
 //amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
     if (error0) {
@@ -137,6 +135,5 @@ amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connectio
         });
     });
 });
+
 */
-
-
