@@ -45,6 +45,7 @@ var opts = {
          fs.readFileSync(path.resolve( './', './azureca2.pem'))]
 };
 
+/*
 amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connection) {
 //amqp.connect('amqp://guest:guest@'+rabbitHost, function(error0, connection) {
     if (error0) {
@@ -136,6 +137,6 @@ amqp.connect('amqps://guest:guest@'+rabbitHost, opts, function(error0, connectio
         });
     });
 });
-
+*/
 
 
