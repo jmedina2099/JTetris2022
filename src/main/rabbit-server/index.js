@@ -10,6 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import request from 'request';
 
+//var hostRabbit = 'localhost';
 var hostRabbit = 'jtetrisapprabbitmqserver.azurewebsites.net';
 var rabbitPort = 5671;
 
@@ -17,6 +18,8 @@ var hostBack = 'localhost';
 var hostPort = '8080';
 
 var portProxy = 4000;
+
+var socketConection = [];
 
 console.log( 'Starting listener on port='+portProxy );
 
@@ -30,7 +33,6 @@ var io = new Server(server,{
   }
 });
 server.listen(portProxy);
-var socketConection = [];
 connection(io,socketConection);
 
 var forwardtoBack  = (req, res, url ) => {
