@@ -36,8 +36,8 @@ var socketConection = [];
 connection(io,socketConection);
 
 var port = 5671;
-var rabbitHost = 'localhost';
-//var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net';
+//var rabbitHost = 'localhost';
+var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net';
 
 var urlObj = {
     protocol: 'amqps',
@@ -60,7 +60,6 @@ var opts = {
          fs.readFileSync(path.resolve( './', './azureca2.pem'))]
 };
 
-/*
 console.log( 'Connecting to rabbitmq...' );
 amqp.connect(urlObj, opts, function(error0, connection) {
     console.log( 'Answering..' );
@@ -154,4 +153,3 @@ amqp.connect(urlObj, opts, function(error0, connection) {
         });
     });
 });
-*/
