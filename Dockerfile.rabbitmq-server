@@ -12,7 +12,7 @@ COPY certs/* /etc/rabbitmq/certs/
 
 COPY config/rabbitmq.conf /etc/rabbitmq/
 
-EXPOSE 2222 5672 4000
+EXPOSE 2222 5671 4000
 
 WORKDIR /home/jtetris/JTetris2022
 ENTRYPOINT ["./run-rabbitmq-server"]
