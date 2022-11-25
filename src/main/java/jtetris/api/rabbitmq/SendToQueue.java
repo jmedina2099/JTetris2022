@@ -2,6 +2,8 @@ package jtetris.api.rabbitmq;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
@@ -29,11 +31,19 @@ public class SendToQueue {
 	
 	//private String url = "localhost";
 	private String url = "jtetrisapprabbitmqserver.azurewebsites.net";
+	private int port = 5671;
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
 		this.factory.setHost(url);
-		this.factory.setPort(443);
+		this.factory.setPort(port);
+		try {
+			this.factory.useSslProtocol();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void sendScore(int score) {
