@@ -1,12 +1,24 @@
-FROM openjdk:11
+FROM debian:bookworm
 
 RUN apt-get update  
+
+# Install jdk
+RUN apt-get install -y openjdk-11-jdk
+
+# INSTALL utils
+RUN apt-get install -y vim net-tools
+
+# INSTALL OpenSSL
+RUN apt-get install -y openssl
 
 # Install maven
 RUN apt-get install -y maven
 
 # Install rabbitmq
 RUN apt-get install -y rabbitmq-server
+
+# Install curl
+RUN apt-get install -y curl
 
 # Install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash
@@ -39,4 +51,5 @@ COPY config/ssh_setup.sh /tmp
 RUN chmod +x /tmp/ssh_setup.sh \
     && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 
-
+# Install git
+RUN apt-get install -y git
