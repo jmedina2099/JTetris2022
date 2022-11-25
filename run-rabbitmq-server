@@ -15,4 +15,8 @@ rabbitmqctl set_permissions -p '/' 'jmedina' '.*' '.*' '.*'
 rabbitmqctl set_user_tags 'jmedina' 'administrator'
 rabbitmqctl list_users
 
+echo "Running back end..."
+(./run-back &)
+
+echo "Running the rabbit client..."
 ./run-rabbitmq-client

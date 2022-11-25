@@ -1,4 +1,4 @@
 {
-    "backend_address": "https://jtetrisappback.azurewebsites.net",
-    "node_rabbitmq_address": "https://jtetrisapprabbitmqclient.azurewebsites.net"
+    "backend_address": "https://jtetrisapprabbitmqserver.azurewebsites.net",
+    "node_rabbitmq_address": "https://jtetrisapprabbitmqserver.azurewebsites.net"
 }

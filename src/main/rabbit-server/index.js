@@ -8,19 +8,16 @@ import cors from 'cors';
 import amqp from 'amqplib/callback_api.js';
 import fs from 'fs';
 import path from 'path';
+import request from 'request';
 
-var port = 4000;
+//var host = 'localhost';
+var host = 'jtetrisapprabbitmqserver.azurewebsites.net';
+var hostBack = 'localhost';
 
-/*
-const app = express();
-app.get('/.well-known/pki-validation/E09C9F9EDF3AEAB5DD155570E4244C55.txt', (req, res) => {
-    const filename = path.resolve( './', './E09C9F9EDF3AEAB5DD155570E4244C55.txt')
-    res.download(filename);
-});
-app.listen(port, () => console.log(`Started server at http://localhost:4000!`));
-*/
+var portProxy = 4000;
+var rabbitPort = 443;
 
-console.log( 'Starting listener on port='+port );
+console.log( 'Starting listener on port='+portProxy );
 
 var app = express();
 app.use(cors());
@@ -31,18 +28,34 @@ var io = new Server(server,{
     methods: ['GET', 'POST']
   }
 });
-server.listen(port);
+server.listen(portProxy);
 var socketConection = [];
 connection(io,socketConection);
 
-var port = 5671;
-//var rabbitHost = 'localhost';
-var rabbitHost = 'jtetrisapprabbitmqserver.azurewebsites.net';
+app.get('/', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080')).pipe(res);
+}).get('/start', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/start')).pipe(res);
+}).get('/pause', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/pause')).pipe(res);
+}).get('/right', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/right')).pipe(res);
+}).get('/left', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/left')).pipe(res);
+}).get('/up', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/up')).pipe(res);
+}).get('/down', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/down')).pipe(res);
+}).get('/space', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/space')).pipe(res);
+}).get('/board', (req, res) => {
+    req.pipe(request('http://'+hostBack+':8080/board')).pipe(res);
+});
 
 var urlObj = {
     protocol: 'amqps',
-    hostname: rabbitHost,
-    port: port,
+    hostname: host,
+    port: rabbitPort,
     username: 'jmedina',
     password: 'jmedina',
     locale: 'en_US',

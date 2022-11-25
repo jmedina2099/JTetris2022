@@ -4,6 +4,9 @@ RUN mkdir -p /home/jtetris
 WORKDIR /home/jtetris
 RUN git clone https://github.com/jmedina2099/JTetris2022.git
 
+WORKDIR /home/jtetris/JTetris2022
+RUN mvn clean package
+
 WORKDIR /home/jtetris/JTetris2022/src/main/rabbit-server
 RUN npm i
 
@@ -12,7 +15,7 @@ COPY certs/* /etc/rabbitmq/certs/
 
 COPY config/rabbitmq.conf /etc/rabbitmq/
 
-EXPOSE 2222 5671 4000
+EXPOSE 2222 5671 4000 8080
 
 WORKDIR /home/jtetris/JTetris2022
 ENTRYPOINT ["./run-rabbitmq-server"]
