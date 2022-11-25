@@ -30,13 +30,18 @@ public class SendToQueue {
 	private ConnectionFactory factory;
 	
 	//private String url = "localhost";
-	private String url = "jtetrisapprabbitmqserver.azurewebsites.net";
-	private int port = 5671;
+	private String URL = "jtetrisapprabbitmqserver.azurewebsites.net";
+	private int PORT = 5671;
+	
+	private String USERNAME = "jmedina";
+	private String PASSWORD = "jmedina";
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
-		this.factory.setHost(url);
-		this.factory.setPort(port);
+		this.factory.setHost(URL);
+		this.factory.setPort(PORT);
+		this.factory.setUsername(USERNAME);
+		this.factory.setPassword(PASSWORD);
 		try {
 			this.factory.useSslProtocol();
 		} catch (KeyManagementException e) {
