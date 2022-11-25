@@ -10,12 +10,13 @@ import fs from 'fs';
 import path from 'path';
 import request from 'request';
 
-//var host = 'localhost';
-var host = 'jtetrisapprabbitmqserver.azurewebsites.net';
+var hostRabbit = 'jtetrisapprabbitmqserver.azurewebsites.net';
+var rabbitPort = 5671;
+
 var hostBack = 'localhost';
+var hostPort = '8080';
 
 var portProxy = 4000;
-var rabbitPort = 443;
 
 console.log( 'Starting listener on port='+portProxy );
 
@@ -32,137 +33,172 @@ server.listen(portProxy);
 var socketConection = [];
 connection(io,socketConection);
 
-app.get('/', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080')).pipe(res);
-}).get('/start', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/start')).pipe(res);
-}).get('/pause', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/pause')).pipe(res);
-}).get('/right', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/right')).pipe(res);
-}).get('/left', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/left')).pipe(res);
-}).get('/up', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/up')).pipe(res);
-}).get('/down', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/down')).pipe(res);
-}).get('/space', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/space')).pipe(res);
-}).get('/board', (req, res) => {
-    req.pipe(request('http://'+hostBack+':8080/board')).pipe(res);
-});
-
-var urlObj = {
-    protocol: 'amqps',
-    hostname: host,
-    port: rabbitPort,
-    username: 'jmedina',
-    password: 'jmedina',
-    locale: 'en_US',
-    frameMax: 0,
-    heartbeat: 0,
-    vhost: '/',
-}
-
-var opts = {
-    cert: fs.readFileSync(path.resolve( './', './client.crt')),
-    key:  fs.readFileSync(path.resolve( './', './client.key')),
-    ca: [fs.readFileSync(path.resolve( './', './autoridad1.crt')),
-         fs.readFileSync(path.resolve( './', './autoridad2.crt')),
-         fs.readFileSync(path.resolve( './', './azureca1.pem')),
-         fs.readFileSync(path.resolve( './', './azureca2.pem'))]
+var forwardtoBack  = (req, res, url ) => {
+    try {
+        req.pipe(request(url))
+            .on('error', err => {
+                const msg = 'Error on connecting to the request, url='+url;
+                console.error(msg, err);
+                res.status(500).send(msg);
+            })
+            .pipe(res);
+    } catch (error) {
+        console.error( "********************** ERROR on forwardtoBack()" );
+        console.error(error);
+        res.status(404).send({
+            message: 'Error redirecting to url ='+url
+        });
+    }
 };
 
-console.log( 'Connecting to rabbitmq...' );
-amqp.connect(urlObj, opts, function(error0, connection) {
-    console.log( 'Answering..' );
-    if (error0) {
-        throw error0;
-    }
-    console.log( 'No errors..' );
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
-        var queue = 'score-queue';
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-        channel.consume(queue, function(msg) {
-            if( socketConection[0] ) {
-                socketConection[0].sendScore(msg.content.toString());
-            }
-        }, {
-            noAck: true
-        });
-    });
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
-        var queue = 'board-queue';
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-        channel.consume(queue, function(msg) {
-            if( socketConection[0] ) {
-                socketConection[0].sendBoard(msg.content.toString());
-            }
-        }, {
-            noAck: true
-        });
-    });
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
-        var queue = 'hash-board-queue';
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-        channel.consume(queue, function(msg) {
-            if( socketConection[0] ) {
-                socketConection[0].sendHash(msg.content.toString());
-            }
-        }, {
-            noAck: true
-        });
-    });
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
-        var queue = 'figures-queue';
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-        channel.consume(queue, function(msg) {
-            if( socketConection[0] ) {
-                socketConection[0].sendFigures(msg.content.toString());
-            }
-        }, {
-            noAck: true
-        });
-    });
-    connection.createChannel(function(error1, channel) {
-        if (error1) {
-            throw error1;
-        }
-        var queue = 'figure-falling-queue';
-        channel.assertQueue(queue, {
-            durable: false
-        });
-        console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-        channel.consume(queue, function(msg) {
-            if( socketConection[0] ) {
-                socketConection[0].sendFigureFalling(msg.content.toString());
-            }
-        }, {
-            noAck: true
-        });
-    });
+app.get('/', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort);
+}).get('/start', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/start');
+}).get('/pause', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/pause');
+}).get('/right', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/right');
+}).get('/left', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/left');
+}).get('/up', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/up');
+}).get('/down', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/down');
+}).get('/space', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/space');
+}).get('/board', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/board');
 });
+
+app.use((err,req,res,next) => {
+    res.status(500).send('ERROR')
+});
+
+var amqpCreateQueueListeners = ( socketConn ) => {
+
+    var urlObj = {
+        protocol: 'amqps',
+        hostname: hostRabbit,
+        port: rabbitPort,
+        username: 'jmedina',
+        password: 'jmedina',
+        locale: 'en_US',
+        frameMax: 0,
+        heartbeat: 0,
+        vhost: '/',
+    }
+
+    var opts = {
+        cert: fs.readFileSync(path.resolve( './', './client.crt')),
+        key:  fs.readFileSync(path.resolve( './', './client.key')),
+        ca: [fs.readFileSync(path.resolve( './', './autoridad1.crt')),
+            fs.readFileSync(path.resolve( './', './autoridad2.crt')),
+            fs.readFileSync(path.resolve( './', './azureca1.pem')),
+            fs.readFileSync(path.resolve( './', './azureca2.pem'))]
+    };
+
+    console.log( 'Connecting to rabbitmq...' );
+    amqp.connect(urlObj, opts, function(error0, connection) {
+        console.log( 'Answering..' );
+        if (error0) {
+            console.error(error0);
+            return;
+        }
+        console.log( 'No errors..' );
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+            var queue = 'score-queue';
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+            channel.consume(queue, function(msg) {
+                if( socketConn[0] ) {
+                    socketConn[0].sendScore(msg.content.toString());
+                }
+            }, {
+                noAck: true
+            });
+        });
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+            var queue = 'board-queue';
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+            channel.consume(queue, function(msg) {
+                if( socketConn[0] ) {
+                    socketConn[0].sendBoard(msg.content.toString());
+                }
+            }, {
+                noAck: true
+            });
+        });
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+            var queue = 'hash-board-queue';
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+            channel.consume(queue, function(msg) {
+                if( socketConn[0] ) {
+                    socketConn[0].sendHash(msg.content.toString());
+                }
+            }, {
+                noAck: true
+            });
+        });
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+            var queue = 'figures-queue';
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+            channel.consume(queue, function(msg) {
+                if( socketConn[0] ) {
+                    socketConn[0].sendFigures(msg.content.toString());
+                }
+            }, {
+                noAck: true
+            });
+        });
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+            var queue = 'figure-falling-queue';
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+            channel.consume(queue, function(msg) {
+                if( socketConn[0] ) {
+                    socketConn[0].sendFigureFalling(msg.content.toString());
+                }
+            }, {
+                noAck: true
+            });
+        });
+    });
+}
+
+try {
+    amqpCreateQueueListeners( socketConection );
+} catch (error) {
+    console.error( "********************** ERROR on amqpCreateQueueListeners()" );
+    console.error(error);
+}
+
+console.error( "END of index.js" );

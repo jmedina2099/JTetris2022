@@ -7,6 +7,12 @@ export class Connection {
     socket.on('connect_error', (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
+    socker.on('uncaughtException', (err) => {
+      console.log(`uncaughtException ${err.message}`);
+    });
+    socker.on('error', (err) => {
+      console.log(`error ${err.message}`);
+    });    
   }
   
   sendScore(score) {
@@ -32,6 +38,11 @@ export class Connection {
 
 export function connection(io,socketConection) {
   io.on('connection', (socket) => {
-    socketConection[0] = new Connection(io, socket);
+    try {
+      socketConection[0] = new Connection(io, socket);
+    } catch(error) {
+      console.error( "********************** ERROR on connection()" );
+      console.error(error);      
+    }
   });
 };
