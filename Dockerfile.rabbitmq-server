@@ -12,8 +12,6 @@ COPY certs/* /etc/rabbitmq/certs/
 
 COPY config/rabbitmq.conf /etc/rabbitmq/
 
-RUN echo "127.0.0.1       jtetrisapprabbitmqserver.azurewebsites.net" >> /etc/hosts
-
 EXPOSE 2222 5671 4000
 
 WORKDIR /home/jtetris/JTetris2022
