@@ -20,9 +20,14 @@ public class TetrisController {
 	@Autowired
 	private Engine engine;
 
+	@GetMapping("/")
+	public synchronized ResponseEntity<String> index() {
+		return new ResponseEntity<String>("SUCESS", HttpStatus.OK);
+	}
+
 	@GetMapping("/status")
-	public String index() {
-		return ""+this.engine.running;
+	public synchronized ResponseEntity<Boolean> status() {
+		return new ResponseEntity<Boolean>(this.engine.running, HttpStatus.OK);
 	}
 	
 	@GetMapping("/start")
