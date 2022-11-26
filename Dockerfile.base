@@ -1,9 +1,9 @@
-FROM debian:bookworm
+FROM openjdk:11
 
 RUN apt-get update  
 
 # Install jdk
-RUN apt-get install -y openjdk-11-jdk
+# RUN apt-get install -y openjdk-11-jdk
 
 # INSTALL utils
 RUN apt-get install -y vim net-tools
