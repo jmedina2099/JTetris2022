@@ -20,7 +20,7 @@ public class TetrisController {
 	@Autowired
 	private Engine engine;
 
-	@GetMapping("/")
+	@GetMapping("/status")
 	public String index() {
 		return ""+this.engine.running;
 	}

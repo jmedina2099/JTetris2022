@@ -54,7 +54,9 @@ var forwardtoBack  = (req, res, url ) => {
 };
 
 app.get('/', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort);
+    res.status(200).send('SUCESS');
+}).get('/status', (req, res) => {
+    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/status');
 }).get('/start', (req, res) => {
     forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/start');
 }).get('/pause', (req, res) => {
