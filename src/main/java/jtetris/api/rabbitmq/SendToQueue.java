@@ -43,15 +43,14 @@ public class SendToQueue {
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
-		//this.factory.setHost(URL);
-		//this.factory.setPort(PORT);
-		//this.factory.setUsername(USERNAME);
-		//this.factory.setPassword(PASSWORD);
-		this.factory.useSslProtocol();
+		this.factory.setHost(URL);
+		this.factory.setPort(PORT);
+		this.factory.setUsername(USERNAME);
+		this.factory.setPassword(PASSWORD);
+		this.factory.setVirtualHost(VHOST);
 		try {
-			this.factory.setUri( "amqps://"+USERNAME+":"+PASSWORD+"@"+URL+":"+PORT+"/"+VHOST );
-		} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e) {
-			// TODO Auto-generated catch block
+			this.factory.useSslProtocol();
+		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
