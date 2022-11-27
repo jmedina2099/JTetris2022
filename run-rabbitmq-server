@@ -4,7 +4,7 @@ echo "Adding hostname to /etc/hosts"
 echo "127.0.0.1       jtetrisapprabbitmqserver.azurewebsites.net" >> /etc/hosts
 
 echo "Starting ssh server..."
-service ssh start
+service ssh restart
 
 echo "Starting rabbit server..."
 service rabbitmq-server restart

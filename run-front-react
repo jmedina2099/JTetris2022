@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Starting ssh server..."
+service ssh restart
+
 cd src/main/react/
 
 # DEV

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+echo "Adding hostname to /etc/hosts"
+echo "127.0.0.1       jtetrisapprabbitmqclient.azurewebsites.net" >> /etc/hosts
+
+echo "Starting ssh server..."
+service ssh restart
+
 echo "Running rabbitmq client..."
 cd src/main/rabbit-server
 node index.js
