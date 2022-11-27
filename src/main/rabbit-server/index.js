@@ -58,10 +58,10 @@ app.get('/', (req, res) => {
     res.status(200).send('SUCESS');
 }).get('/rbbt*', (req, res) => {
     console.log( 'GET Redirection to rabbit..' );
-    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
+    forwardtoBack( req,res,'https://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
 }).post('/rbbt*', (req, res) => {
     console.log( 'POST Redirection to rabbit..' );
-    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
+    forwardtoBack( req,res,'https://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
 }).get('/status', (req, res) => {
     forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/status');
 }).get('/start', (req, res) => {
