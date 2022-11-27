@@ -9,10 +9,14 @@ service ssh start
 echo "Starting rabbit server..."
 service rabbitmq-server restart
 
+echo "Adding vhost"
+rabbitmqctl add_vhost rbbt
+rabbitmqctl list_vhosts
+
 echo "Adding user to rabbit..."
-rabbitmqctl add_user 'jmedina' 'jmedina'
-rabbitmqctl set_permissions -p '/' 'jmedina' '.*' '.*' '.*'
-rabbitmqctl set_user_tags 'jmedina' 'administrator'
+rabbitmqctl add_user jmedina jmedina
+rabbitmqctl set_permissions -p rbbt jmedina '.*' '.*' '.*'
+rabbitmqctl set_user_tags jmedina administrator
 rabbitmqctl list_users
 
 echo "Running back end..."

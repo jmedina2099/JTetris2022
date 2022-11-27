@@ -55,8 +55,11 @@ var forwardtoBack  = (req, res, url ) => {
 
 app.get('/', (req, res) => {
     res.status(200).send('SUCESS');
-}).get('/rabbitmq/*', (req, res) => {
-    console.log( 'Redirection to rabbit..' );
+}).get('/rbbt*', (req, res) => {
+    console.log( 'GET Redirection to rabbit..' );
+    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
+}).post('/rbbt*', (req, res) => {
+    console.log( 'POST Redirection to rabbit..' );
     forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
 }).get('/status', (req, res) => {
     forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/status');
@@ -93,7 +96,7 @@ var amqpCreateQueueListeners = ( socketConn ) => {
         locale: 'en_US',
         frameMax: 0,
         heartbeat: 0,
-        vhost: '/',
+        vhost: 'rbbt',
     }
 
     var opts = {

@@ -30,15 +30,16 @@ public class SendToQueue {
 
 	private ConnectionFactory factory;
 	
-	private String url = "localhost";
+	private String URL = "localhost";
 	//private int PORT = 5671;
 
-	private String URL = "jtetrisapprabbitmqserver.azurewebsites.net";
+//	private String URL = "jtetrisapprabbitmqserver.azurewebsites.net";
 	private int PORT = 4000;
 //	private int PORT = 443;
 	
 	private String USERNAME = "jmedina";
 	private String PASSWORD = "jmedina";
+	private String VHOST = "rbbt"; 
 
 	public SendToQueue() {
 		this.factory = new ConnectionFactory();
@@ -48,7 +49,7 @@ public class SendToQueue {
 		this.factory.setPassword(PASSWORD);
 		//this.factory.useSslProtocol();
 		try {
-			this.factory.setUri( "amqps://"+USERNAME+":"+PASSWORD+"@"+URL+":"+PORT+"/rabbitmq/" );
+			this.factory.setUri( "amqps://"+USERNAME+":"+PASSWORD+"@"+URL+":"+PORT+"/"+VHOST );
 		} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
