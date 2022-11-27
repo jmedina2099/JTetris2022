@@ -1,6 +1,7 @@
 package jtetris.api.rabbitmq;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -29,9 +30,12 @@ public class SendToQueue {
 
 	private ConnectionFactory factory;
 	
-	//private String url = "localhost";
+	private String url = "localhost";
+	//private int PORT = 5671;
+
 	private String URL = "jtetrisapprabbitmqserver.azurewebsites.net";
-	private int PORT = 5671;
+	private int PORT = 4000;
+//	private int PORT = 443;
 	
 	private String USERNAME = "jmedina";
 	private String PASSWORD = "jmedina";
@@ -42,11 +46,11 @@ public class SendToQueue {
 		this.factory.setPort(PORT);
 		this.factory.setUsername(USERNAME);
 		this.factory.setPassword(PASSWORD);
+		//this.factory.useSslProtocol();
 		try {
-			this.factory.useSslProtocol();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
+			this.factory.setUri( "amqps://"+USERNAME+":"+PASSWORD+"@"+URL+":"+PORT+"/rabbitmq/" );
+		} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

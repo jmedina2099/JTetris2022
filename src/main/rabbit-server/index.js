@@ -55,6 +55,9 @@ var forwardtoBack  = (req, res, url ) => {
 
 app.get('/', (req, res) => {
     res.status(200).send('SUCESS');
+}).get('/rabbitmq/*', (req, res) => {
+    console.log( 'Redirection to rabbit..' );
+    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
 }).get('/status', (req, res) => {
     forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/status');
 }).get('/start', (req, res) => {
