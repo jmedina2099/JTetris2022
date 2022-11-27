@@ -13,6 +13,7 @@ import request from 'request';
 //var hostRabbit = 'localhost';
 var hostRabbit = 'jtetrisapprabbitmqserver.azurewebsites.net';
 var rabbitPort = 5671;
+var vhostRabbit = 'rbbt';
 
 var hostBack = 'localhost';
 var hostPort = '8080';
@@ -57,7 +58,7 @@ app.get('/', (req, res) => {
     res.status(200).send('SUCESS');
 }).get('/rbbt*', (req, res) => {
     console.log( 'GET Redirection to rabbit..' );
-    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
+    forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
 }).post('/rbbt*', (req, res) => {
     console.log( 'POST Redirection to rabbit..' );
     forwardtoBack( req,res,'http://'+hostRabbit+':'+rabbitPort );
@@ -96,7 +97,7 @@ var amqpCreateQueueListeners = ( socketConn ) => {
         locale: 'en_US',
         frameMax: 0,
         heartbeat: 0,
-        vhost: 'rbbt',
+        vhost: vhostRabbit,
     }
 
     var opts = {

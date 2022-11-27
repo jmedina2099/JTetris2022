@@ -31,10 +31,10 @@ public class SendToQueue {
 	private ConnectionFactory factory;
 	
 	private String URL = "localhost";
-	//private int PORT = 5671;
+	private int PORT = 5671;
 
 //	private String URL = "jtetrisapprabbitmqserver.azurewebsites.net";
-	private int PORT = 4000;
+//	private int PORT = 4000;
 //	private int PORT = 443;
 	
 	private String USERNAME = "jmedina";
