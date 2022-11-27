@@ -12,7 +12,7 @@ import request from 'request';
 
 //var hostRabbit = 'localhost';
 var hostRabbit = 'jtetrisapprabbitmqserver.azurewebsites.net';
-var rabbitPort = 5671;
+var rabbitPort = 443;
 var vhostRabbit = 'rbbt';
 
 var hostBack = 'localhost';
