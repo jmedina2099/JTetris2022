@@ -4,10 +4,11 @@ RUN mkdir -p /home/jtetris
 WORKDIR /home/jtetris
 RUN git clone https://github.com/jmedina2099/JTetris2022.git
 
+# COMPILATION
 WORKDIR /home/jtetris/JTetris2022
 RUN mvn clean package
 
-EXPOSE 8080
+EXPOSE 2222 8080
 
 WORKDIR /home/jtetris/JTetris2022
 ENTRYPOINT ["./run-back"]

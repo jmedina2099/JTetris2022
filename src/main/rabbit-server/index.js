@@ -8,19 +8,22 @@ import cors from 'cors';
 import amqp from 'amqplib/callback_api.js';
 import fs from 'fs';
 import path from 'path';
-import request from 'request';
 
 //var hostRabbit = 'localhost';
 var hostRabbit = 'jtetrisapprabbitmqserver.azurewebsites.net';
-var rabbitPort = 443;
+var rabbitPort = 5671;
 var vhostRabbit = 'rbbt';
-
-var hostBack = 'localhost';
-var hostPort = '8080';
 
 var portProxy = 4000;
 
 var socketConection = [];
+var channels = {
+    channelHash: undefined,
+    channelScore: undefined,
+    channelBoard: undefined,
+    channelFiguras: undefined,
+    channelFiguraCayendo: undefined,
+}
 
 console.log( 'Starting listener on port='+portProxy );
 
@@ -34,57 +37,7 @@ var io = new Server(server,{
   }
 });
 server.listen(portProxy);
-connection(io,socketConection);
-
-var forwardtoBack  = (req, res, url ) => {
-    try {
-        req.pipe(request(url))
-            .on('error', err => {
-                const msg = 'Error on connecting to the request, url='+url;
-                console.error(msg, err);
-                res.status(500).send(msg);
-            })
-            .pipe(res);
-    } catch (error) {
-        console.error( "********************** ERROR on forwardtoBack()" );
-        console.error(error);
-        res.status(404).send({
-            message: 'Error redirecting to url ='+url
-        });
-    }
-};
-
-app.get('/', (req, res) => {
-    res.status(200).send('SUCESS');
-}).get('/rbbt*', (req, res) => {
-    console.log( 'GET Redirection to rabbit..' );
-    forwardtoBack( req,res,'https://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
-}).post('/rbbt*', (req, res) => {
-    console.log( 'POST Redirection to rabbit..' );
-    forwardtoBack( req,res,'https://'+hostRabbit+':'+rabbitPort+"/"+vhostRabbit );
-}).get('/status', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/status');
-}).get('/start', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/start');
-}).get('/pause', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/pause');
-}).get('/right', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/right');
-}).get('/left', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/left');
-}).get('/up', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/up');
-}).get('/down', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/down');
-}).get('/space', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/space');
-}).get('/board', (req, res) => {
-    forwardtoBack( req,res,'http://'+hostBack+':'+hostPort+'/board');
-});
-
-app.use((err,req,res,next) => {
-    res.status(500).send('ERROR')
-});
+connection(io,socketConection,channels);
 
 var amqpCreateQueueListeners = ( socketConn ) => {
 
@@ -121,6 +74,9 @@ var amqpCreateQueueListeners = ( socketConn ) => {
             if (error1) {
                 throw error1;
             }
+
+            channels.channelScore = channel;
+
             var queue = 'score-queue';
             channel.assertQueue(queue, {
                 durable: false
@@ -138,6 +94,9 @@ var amqpCreateQueueListeners = ( socketConn ) => {
             if (error1) {
                 throw error1;
             }
+
+            channels.channelBoard = channel;
+
             var queue = 'board-queue';
             channel.assertQueue(queue, {
                 durable: false
@@ -155,6 +114,9 @@ var amqpCreateQueueListeners = ( socketConn ) => {
             if (error1) {
                 throw error1;
             }
+
+            channels.channelHash = channel;
+
             var queue = 'hash-board-queue';
             channel.assertQueue(queue, {
                 durable: false
@@ -172,6 +134,9 @@ var amqpCreateQueueListeners = ( socketConn ) => {
             if (error1) {
                 throw error1;
             }
+
+            channels.channelFiguras = channel;
+
             var queue = 'figures-queue';
             channel.assertQueue(queue, {
                 durable: false
@@ -189,6 +154,9 @@ var amqpCreateQueueListeners = ( socketConn ) => {
             if (error1) {
                 throw error1;
             }
+
+            channels.channelFiguraCayendo = channel;
+
             var queue = 'figure-falling-queue';
             channel.assertQueue(queue, {
                 durable: false

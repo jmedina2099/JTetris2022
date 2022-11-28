@@ -1,6 +1,10 @@
 #!/bin/bash
 
-echo "* Running spring-boot.. *"
+echo "Adding hostname to /etc/hosts"
+echo "127.0.0.1       jtetrisappback.azurewebsites.net" >> /etc/hosts
+
+echo "Starting ssh server..."
+service ssh restart
+
+echo "****************** Running spring-boot.. *********************"
 java -jar target/jtetris-0.0.1-SNAPSHOT.jar
-
-

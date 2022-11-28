@@ -1,8 +1,12 @@
 #!/bin/bash
 
+echo "Adding hostname to /etc/hosts"
+echo "127.0.0.1       jtetrisappreact.azurewebsites.net" >> /etc/hosts
+
 echo "Starting ssh server..."
 service ssh restart
 
+echo "Dispatching react..."
 cd src/main/react/
 
 # DEV
@@ -10,5 +14,4 @@ cd src/main/react/
 
 # PROD
 npm run build
-#yarn add serve
 serve -s build

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Adding hostname to /etc/hosts"
+echo "127.0.0.1       jtetrisappangular.azurewebsites.net" >> /etc/hosts
+
+echo "Starting ssh server..."
+service ssh restart
+
+echo "Dispatching angular..."
+cd src/main/angular/
+
+# DEV
+# ng serve --host 0.0.0.0
+
+# PROD
+ng build
+
+cd dist/tetris-angular
+lite-server -c ../../bs-config.json
