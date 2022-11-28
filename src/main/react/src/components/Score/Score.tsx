@@ -7,7 +7,7 @@ const Score = () => {
   const context = useContext(ApiServiceContext);
   useEffect(() => {
     const scoreListener = (scoreCad: string) => {
-      //console.log('score from rabbitmq = ' + scoreCad );
+      console.log('score from rabbitmq = ' + scoreCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const scoreInt = Number.parseInt(scoreCad);
         if( context.board[0].score !== scoreInt ) {

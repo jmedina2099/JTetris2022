@@ -32,21 +32,21 @@ const PanelTetris = () => {
   const apiService = context.apiService;
   useEffect(() => {
     const boardListener = (boardCad: string) => {
-      //console.log('board from rabbitmq = ' + boardCad );
+      console.log('board from rabbitmq = ' + boardCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const boardObj = JSON.parse(boardCad);
         context.board[1]( boardObj );
       }
     };
     const hashListener = (hashCad: string) => {
-      //console.log('hash from rabbitmq = ' + hashCad );
+      console.log('hash from rabbitmq = ' + hashCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const hash = JSON.parse(hashCad);
         context.board[1]( {...context.board[0], hash: hash} );
       }
     };
     const figuresListener = (figuresCad: string) => {
-      //console.log('figures from rabbitmq = ' + figuresCad );
+      console.log('figures from rabbitmq = ' + figuresCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
@@ -55,7 +55,7 @@ const PanelTetris = () => {
       }
     };
     const figureFallingListener = (figureFallingCad: string) => {
-      //console.log('figureFalling from rabbitmq = ' + figureFallingCad );
+      console.log('figureFalling from rabbitmq = ' + figureFallingCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
