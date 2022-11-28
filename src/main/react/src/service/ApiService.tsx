@@ -35,7 +35,7 @@ export class ApiService {
   setBoardFunc(context : Game, newBoard: Board, idInterval : NodeJS.Timer[]) {
     const [board,setBoard] = context.board;
     if( board.running && !board.paused ) {
-      setBoard({...board,...newBoard});
+      setBoard(newBoard);
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
       setBoard( {...board, ...newBoard, figuresFixed:[], fallingFigure:undefined, hash:0 } );
