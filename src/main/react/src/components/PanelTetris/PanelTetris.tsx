@@ -67,6 +67,7 @@ const PanelTetris = () => {
         if( figureFalling ) {
           if( context.board[0].hash === figureFalling.hashBoard ) {
             context.board[1]( {...context.board[0], fallingFigure: figureFalling } );
+            figureFallingWaiting = undefined;
           } else {
             figureFallingWaiting = figureFalling;
           }
