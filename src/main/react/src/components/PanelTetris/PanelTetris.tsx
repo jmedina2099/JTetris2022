@@ -58,7 +58,7 @@ const PanelTetris = () => {
       console.log('figureFalling from rabbitmq = ' + figureFallingCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
-        if( figureFalling ) {
+        if( figureFalling && context.board[0].hash === figureFalling.hashBoard ) {
           context.board[1]( {...context.board[0], fallingFigure: figureFalling} );
         }
       }
