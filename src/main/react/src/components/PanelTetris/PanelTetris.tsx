@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { ApiServiceContext, Game } from '../../App';
-import Box from '../Box/Box';
+import Box, { Caja } from '../Box/Box';
 import Figure, { Figura } from '../Figure/Figure';
 
 import "./panelTetris.css";
@@ -30,8 +30,9 @@ const PanelTetris = () => {
   const context = useContext(ApiServiceContext);
   context.intervalFetch = useState<NodeJS.Timer>();
   const apiService = context.apiService;
-  let figureFallingWaiting: Figura | undefined = undefined;
   useEffect(() => {
+    let figureFallingWaiting: Figura | undefined = undefined;
+    let figuresFixedWaiting: Caja[] | undefined = undefined;
     const boardListener = (boardCad: string) => {
       console.log('board from rabbitmq = ' + boardCad );
       if( context.board[0].running && !context.board[0].paused ) {
@@ -52,10 +53,10 @@ const PanelTetris = () => {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
           if( figureFallingWaiting ) {
-            context.board[1]( {...context.board[0], figuresFixed: figures, hash: figures[0].hashBoard, fallingFigure: figureFallingWaiting } );
+            context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
             figureFallingWaiting = undefined;
           } else {
-            context.board[1]( {...context.board[0], figuresFixed: figures, hash: figures[0].hashBoard } );
+            figuresFixedWaiting = figures; // First arrival, wait.
           }
         }
       }
@@ -65,11 +66,11 @@ const PanelTetris = () => {
       if( context.board[0].running && !context.board[0].paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
-          if( context.board[0].hash === figureFalling.hashBoard ) {
-            context.board[1]( {...context.board[0], fallingFigure: figureFalling } );
-            figureFallingWaiting = undefined;
+          if( figuresFixedWaiting ) {
+            context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
+            figuresFixedWaiting = undefined;
           } else {
-            figureFallingWaiting = figureFalling;
+            figureFallingWaiting = figureFalling; // First arrival, wait.
           }
         }
       }
