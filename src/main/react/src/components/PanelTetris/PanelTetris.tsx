@@ -53,7 +53,7 @@ const PanelTetris = () => {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
           if( figureFallingWaiting ) {
-            context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
+            context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, timestamp: figureFallingWaiting.timestamp, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
             figureFallingWaiting = undefined;
           } else {
             figuresFixedWaiting = figures; // First arrival, wait.
@@ -67,7 +67,7 @@ const PanelTetris = () => {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
           if( figuresFixedWaiting ) {
-            context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
+            context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, timestamp: figureFalling.timestamp, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
             figuresFixedWaiting = undefined;
           } else {
             figureFallingWaiting = figureFalling; // First arrival, wait.
@@ -75,13 +75,13 @@ const PanelTetris = () => {
         }
       }
     };
-    //if( context.socket[0] ) context.socket[0].on('board', boardListener);
-    //if( context.socket[0] ) context.socket[0].on('hash', hashListener);
+    if( context.socket[0] ) context.socket[0].on('board', boardListener);
+    if( context.socket[0] ) context.socket[0].on('hash', hashListener);
     if( context.socket[0] ) context.socket[0].on('figures', figuresListener);
     if( context.socket[0] ) context.socket[0].on('figure_falling', figureFallingListener);
     return () => {
-      //if( context.socket[0] ) context.socket[0].off('board', boardListener);
-      //if( context.socket[0] ) context.socket[0].off('hash', hashListener);
+      if( context.socket[0] ) context.socket[0].off('board', boardListener);
+      if( context.socket[0] ) context.socket[0].off('hash', hashListener);
       if( context.socket[0] ) context.socket[0].off('figures', figuresListener);
       if( context.socket[0] ) context.socket[0].off('figure_falling', figureFallingListener);
     };

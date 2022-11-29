@@ -3,7 +3,7 @@ import Box, { Caja } from '../Box/Box';
 export interface Figura {
   listBoxes: Caja[]
   hashBoard: number
-  timestamp: number
+  timestamp: string
 }
 
 type FigureProps = {
