@@ -24,7 +24,7 @@ public class SendToQueueSocketIO {
 	private Socket socket;
 
 	public SendToQueueSocketIO() {
-		System.out.println( "SendToQueueSocketIO()" );
+		//System.out.println( "SendToQueueSocketIO()" );
 		try {
 			this.socket = IO.socket( URI );
 			this.socket.on( Socket.EVENT_CONNECT, onConnect );
@@ -44,7 +44,7 @@ public class SendToQueueSocketIO {
 	public void sendScore(int score) {
 		if( !this.socket.connected() ) return;
 		
-		System.out.println( "Sending score to Rabbit.. ="+score );
+		//System.out.println( "Sending score to Rabbit.. ="+score );
 		String message = ""+score;
 		socket.emit( "score", message );
 	}
@@ -52,7 +52,7 @@ public class SendToQueueSocketIO {
 	public void sendBoard(Board board) {
 		if( !this.socket.connected() ) return;
 		
-		System.out.println( "Sending board to Rabbit.." );
+		//System.out.println( "Sending board to Rabbit.." );
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String message = mapper.writeValueAsString(board);
@@ -65,7 +65,7 @@ public class SendToQueueSocketIO {
 	public void sendHashBoard(int hashBoard ) {
 		if( !this.socket.connected() ) return;
 		
-		System.out.println( "Sending hash to Rabbit.. ="+hashBoard );
+		//System.out.println( "Sending hash to Rabbit.. ="+hashBoard );
 		String message = ""+hashBoard;
 		socket.emit( "hash", message );
 	}	
@@ -73,7 +73,7 @@ public class SendToQueueSocketIO {
 	public void sendFiguras(ArrayList<Box> figuresBoxes ) {
 		if( !this.socket.connected() ) return;
 		
-		System.out.println( "Sending figuras to Rabbit.." );
+		//System.out.println( "Sending figuras to Rabbit.." );
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String message = mapper.writeValueAsString(figuresBoxes);
@@ -86,7 +86,7 @@ public class SendToQueueSocketIO {
 	public void sendFiguraCayendo(Figure figuraCayendo ) {
 		if( !this.socket.connected() ) return;
 		
-		System.out.println( "Sending figura cayendo to Rabbit.." );
+		//System.out.println( "Sending figura cayendo to Rabbit.." );
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String message = mapper.writeValueAsString(figuraCayendo);

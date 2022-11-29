@@ -5,31 +5,31 @@ export class Connection {
     this.channels = channels;
 
     socket.on('figuraCayendo', (value) => {
-      console.log( 'from Back publish figuraCayendo='+value );
+      //console.log( 'from Back publish figuraCayendo='+value );
       if( this.channels.channelFiguraCayendo ) {
         this.channels.channelFiguraCayendo.publish("","figure-falling-queue",Buffer.from(value),null);
       }
     });
     socket.on('figuras', (value) => {
-      console.log( 'from Back publish figuras='+value );
+      //console.log( 'from Back publish figuras='+value );
       if( this.channels.channelFiguras ) {
         this.channels.channelFiguras.publish("","figures-queue",Buffer.from(value),null);
       }
     });
     socket.on('board', (value) => {
-      console.log( 'from Back publish board='+value );
+      //console.log( 'from Back publish board='+value );
       if( this.channels.channelBoard ) {
         this.channels.channelBoard.publish("","board-queue",Buffer.from(value),null);
       }
     });
     socket.on('score', (value) => {
-      console.log( 'from Back publish score='+value );
+      //console.log( 'from Back publish score='+value );
       if( this.channels.channelScore ) {
         this.channels.channelScore.publish("","score-queue",Buffer.from(value),null);
       }
     });
     socket.on('hash', (value) => {
-      console.log( 'from Back publish hash='+value );
+      //console.log( 'from Back publish hash='+value );
       if( this.channels.channelHash ) {
         this.channels.channelHash.publish("","hash-board-queue",Buffer.from(value),null);
       }
@@ -37,27 +37,27 @@ export class Connection {
   }
   
   sendScore(score) {
-    console.log( 'Emit SCORE to Front...' );
+    //console.log( 'Emit SCORE to Front...' );
     this.io.sockets.emit('score', score);
   }
   
   sendBoard(board) {
-    console.log( 'Emit BOARD to Front...' );
+    //console.log( 'Emit BOARD to Front...' );
     this.io.sockets.emit('board', board);
   }
 
   sendHash(hash) {
-    console.log( 'Emit HASH to Front...' );
+    //console.log( 'Emit HASH to Front...' );
     this.io.sockets.emit('hash', hash);
   }
 
   sendFigures(figures) {
-    console.log( 'Emit FIGURAS to Front...' );
+    //console.log( 'Emit FIGURAS to Front...' );
     this.io.sockets.emit('figures', figures);
   }
 
   sendFigureFalling(figure) {
-    console.log( 'Emit FIGURA CAYENDO to Front...' );
+    //console.log( 'Emit FIGURA CAYENDO to Front...' );
     this.io.sockets.emit('figure_falling', figure);
   }
 }

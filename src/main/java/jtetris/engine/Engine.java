@@ -398,6 +398,7 @@ public class Engine implements Runnable {
 		Figure fallingFigure = getFallingFigureInside();
 		if( fallingFigure != null ) {
 			fallingFigure.setHashBoard(hashBoard);
+			fallingFigure.setTimestamp( board.getTimestamp() );
 		}
 		
 		board.setHash( hashBoard );

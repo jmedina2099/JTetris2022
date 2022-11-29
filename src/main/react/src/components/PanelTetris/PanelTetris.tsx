@@ -21,7 +21,7 @@ const renderFigures = ( context : Game ) => {
   const [board] = context.board;
   const figuraCayendo = board.fallingFigure;
   const cajas = board.figuresFixed;
-  const first = figuraCayendo? <Figure listBoxes={figuraCayendo.listBoxes} hashBoard={figuraCayendo.hashBoard}/>: <></>;
+  const first = figuraCayendo? <Figure listBoxes={figuraCayendo.listBoxes}/>: <></>;
   const second = cajas.map( box => <Box key={box.x+"-"+box.y} caja={box}/> );
   return <>{first}{second}</>
 }
@@ -34,21 +34,21 @@ const PanelTetris = () => {
     let figureFallingWaiting: Figura | undefined = undefined;
     let figuresFixedWaiting: Caja[] | undefined = undefined;
     const boardListener = (boardCad: string) => {
-      console.log('board from rabbitmq = ' + boardCad );
+      //console.log('board from rabbitmq = ' + boardCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const boardObj = JSON.parse(boardCad);
         context.board[1]( boardObj );
       }
     };
     const hashListener = (hashCad: string) => {
-      console.log('hash from rabbitmq = ' + hashCad );
+      //console.log('hash from rabbitmq = ' + hashCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const hash = JSON.parse(hashCad);
         context.board[1]( {...context.board[0], hash: hash} );
       }
     };
     const figuresListener = (figuresCad: string) => {
-      console.log('figures from rabbitmq = ' + figuresCad );
+      //console.log('figures from rabbitmq = ' + figuresCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
@@ -62,7 +62,7 @@ const PanelTetris = () => {
       }
     };
     const figureFallingListener = (figureFallingCad: string) => {
-      console.log('figureFalling from rabbitmq = ' + figureFallingCad );
+      //console.log('figureFalling from rabbitmq = ' + figureFallingCad );
       if( context.board[0].running && !context.board[0].paused ) {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
@@ -76,12 +76,12 @@ const PanelTetris = () => {
       }
     };
     //if( context.socket[0] ) context.socket[0].on('board', boardListener);
-    if( context.socket[0] ) context.socket[0].on('hash', hashListener);
+    //if( context.socket[0] ) context.socket[0].on('hash', hashListener);
     if( context.socket[0] ) context.socket[0].on('figures', figuresListener);
     if( context.socket[0] ) context.socket[0].on('figure_falling', figureFallingListener);
     return () => {
-      if( context.socket[0] ) context.socket[0].off('board', boardListener);
-      if( context.socket[0] ) context.socket[0].off('hash', hashListener);
+      //if( context.socket[0] ) context.socket[0].off('board', boardListener);
+      //if( context.socket[0] ) context.socket[0].off('hash', hashListener);
       if( context.socket[0] ) context.socket[0].off('figures', figuresListener);
       if( context.socket[0] ) context.socket[0].off('figure_falling', figureFallingListener);
     };

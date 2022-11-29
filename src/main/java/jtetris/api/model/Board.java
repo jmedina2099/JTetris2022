@@ -25,8 +25,10 @@ public class Board {
 	boolean paused;
 	boolean gameOver;
 	int hash;
+	String timestamp;
 	
 	public Board() {
+		this.timestamp = ""+System.currentTimeMillis();
 	}
 
 	public ArrayList<Box> getFiguresFixed() {
@@ -91,6 +93,10 @@ public class Board {
 
 	public int getHash() {
 		return hash;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
 	}
 
 }

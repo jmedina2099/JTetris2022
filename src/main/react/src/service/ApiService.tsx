@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Board, Game } from '../App';
 import { Figura } from '../components/Figure/Figure';
+import Long from "long";
 
 import SERVERNAME from '../servername.json'
 
@@ -24,7 +25,7 @@ export class ApiService {
         this.setBoardFunc(context,response.data,idInterval);
       } else {
         if( idInterval[0] ) clearInterval(idInterval[0]);
-        setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:undefined} );
+        setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:undefined, timestamp:undefined} );
       }
     })
     .catch( (error) => {
@@ -35,7 +36,15 @@ export class ApiService {
   setBoardFunc(context : Game, newBoard: Board, idInterval : NodeJS.Timer[]) {
     const [board,setBoard] = context.board;
     if( board.running && !board.paused ) {
-      setBoard(newBoard);
+      if( board.timestamp && newBoard.timestamp ) {
+        const stampOld = Long.fromString( board.timestamp );
+        const stampNew = Long.fromString( newBoard.timestamp );
+        if( stampNew.compare(stampOld) === 1 ) {
+          setBoard(newBoard);
+        }
+      } else {
+        setBoard(newBoard);
+      }
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
       setBoard( {...board, ...newBoard, figuresFixed:[], fallingFigure:undefined } );
@@ -89,7 +98,7 @@ export class ApiService {
       }
     })
     .catch( (error) => {
-      setBoard( {...board, fallingFigure: undefined} );
+      //setBoard( {...board, fallingFigure: undefined} );
     });
   }
 

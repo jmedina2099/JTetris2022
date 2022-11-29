@@ -21,13 +21,14 @@ export interface Board {
   paused: boolean
   gameOver: boolean
   hash: number | undefined
+  timestamp: string | undefined
   figuresFixed: Caja[]
   fallingFigure: Figura | undefined
   score: number
 }
 
 export const initialBoard: Board = {
-  running:false, paused:false, gameOver:false, fallingFigure:undefined, figuresFixed:[], score:0, hash:undefined
+  running:false, paused:false, gameOver:false, fallingFigure:undefined, figuresFixed:[], score:0, hash:undefined, timestamp:undefined
 };
 
 const ApiServiceImpl = new ApiService();

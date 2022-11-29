@@ -37,6 +37,7 @@ public abstract class Figure implements Cloneable {
 	public Colour colour;
 	
 	public int hashBoard = 0;
+	public String timestamp;
 	
 	protected Figure( int numRotations, Colour colour ) {
 		this.numRotations = numRotations;
@@ -261,5 +262,13 @@ public abstract class Figure implements Cloneable {
 
 	public int getHashBoard() {
 		return this.hashBoard;
+	}
+
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
 	}
 }
