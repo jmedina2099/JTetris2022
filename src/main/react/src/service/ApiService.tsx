@@ -24,7 +24,7 @@ export class ApiService {
         this.setBoardFunc(context,response.data,idInterval);
       } else {
         if( idInterval[0] ) clearInterval(idInterval[0]);
-        setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:0} );
+        setBoard( {...board, figuresFixed:[], fallingFigure:undefined, hash:undefined} );
       }
     })
     .catch( (error) => {
@@ -38,7 +38,7 @@ export class ApiService {
       setBoard(newBoard);
     } else {
       if( idInterval[0] ) clearInterval(idInterval[0]);
-      setBoard( {...board, ...newBoard, figuresFixed:[], fallingFigure:undefined, hash:0 } );
+      setBoard( {...board, ...newBoard, figuresFixed:[], fallingFigure:undefined } );
     }
   }
 
@@ -81,9 +81,9 @@ export class ApiService {
     axios
     .get<Figura>( SERVERNAME.backend_address+url )
     .then( response => {
-      if( response && response.data && Array.isArray(response.data.listBoxes) ) {
+      if( response && response.data ) {
         // Pinta solamente si el hash del board coincide con el hash de la figura.
-        if( board.hash === response.data.hashBoard ) {
+        if( board.hash === undefined || board.hash === response.data.hashBoard ) {
           setBoard( {...board, fallingFigure: response.data} );
         }
       }

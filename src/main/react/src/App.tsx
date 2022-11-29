@@ -20,14 +20,14 @@ export interface Board {
   running: boolean
   paused: boolean
   gameOver: boolean
-  hash: number
+  hash: number | undefined
   figuresFixed: Caja[]
   fallingFigure: Figura | undefined
   score: number
 }
 
 export const initialBoard: Board = {
-  running:false, paused:false, gameOver:false, fallingFigure:undefined, figuresFixed:[], score:0, hash:0
+  running:false, paused:false, gameOver:false, fallingFigure:undefined, figuresFixed:[], score:0, hash:undefined
 };
 
 const ApiServiceImpl = new ApiService();
