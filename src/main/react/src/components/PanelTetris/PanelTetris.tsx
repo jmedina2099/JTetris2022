@@ -1,3 +1,4 @@
+import Long from 'long';
 import { useContext, useState, useEffect } from 'react';
 import { ApiServiceContext, Game } from '../../App';
 import Box, { Caja } from '../Box/Box';
@@ -53,7 +54,19 @@ const PanelTetris = () => {
         const figures = JSON.parse(figuresCad);
         if( figures ) {
           if( figureFallingWaiting ) {
-            context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, timestamp: figureFallingWaiting.timestamp, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
+            if( context.board[0].timestamp && figureFallingWaiting.timestamp ) {
+              const stampOld = Long.fromString( context.board[0].timestamp );
+              const stampNew = Long.fromString( figureFallingWaiting.timestamp );
+              if( stampNew.compare(stampOld) === 1 ) { // Only paint if timestamp is greater
+                console.log( "1) Painting from rabbitmq" );
+                context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, timestamp: figureFallingWaiting.timestamp, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
+              } else {
+                console.log( "timestamp is old" );
+              }
+            } else { // Paint Initial board.
+              console.log( "A) Painting from rabbitmq" );
+              context.board[1]( {...context.board[0], hash: figureFallingWaiting.hashBoard, timestamp: figureFallingWaiting.timestamp, figuresFixed: figures, fallingFigure: figureFallingWaiting } );
+            }
             figureFallingWaiting = undefined;
           } else {
             figuresFixedWaiting = figures; // First arrival, wait.
@@ -67,7 +80,19 @@ const PanelTetris = () => {
         const figureFalling = JSON.parse(figureFallingCad);
         if( figureFalling ) {
           if( figuresFixedWaiting ) {
-            context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, timestamp: figureFalling.timestamp, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
+            if( context.board[0].timestamp && figureFalling.timestamp ) {
+              const stampOld = Long.fromString( context.board[0].timestamp );
+              const stampNew = Long.fromString( figureFalling.timestamp );
+              if( stampNew.compare(stampOld) === 1 ) { // Only paint if timestamp is greater
+                console.log( "2) Painting from rabbitmq" );
+                context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, timestamp: figureFalling.timestamp, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
+              } else {
+                console.log( "timestamp is old" );
+              }
+            } else { // Paint initial board.
+              console.log( "B) Painting from rabbitmq" );
+              context.board[1]( {...context.board[0], hash: figureFalling.hashBoard, timestamp: figureFalling.timestamp, figuresFixed: figuresFixedWaiting, fallingFigure: figureFalling } );
+            }
             figuresFixedWaiting = undefined;
           } else {
             figureFallingWaiting = figureFalling; // First arrival, wait.
