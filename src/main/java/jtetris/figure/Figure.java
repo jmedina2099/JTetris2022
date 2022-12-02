@@ -3,12 +3,16 @@ package jtetris.figure;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jtetris.app.model.FiguraBD;
+import jtetris.engine.Engine;
 
 /**
  * @author jmedina
@@ -38,10 +42,10 @@ public abstract class Figure implements Cloneable {
 	
 	public int hashBoard = 0;
 	public String timestamp;
-	
-	protected Figure( int numRotations, Colour colour ) {
-		this.numRotations = numRotations;
+
+	protected Figure( Colour colour, Engine engine, FiguraBD figura ) {
 		this.colour = colour;
+		init(engine,figura);
 	}
 	
 	protected Figure( int numRotations, int rotation, ArrayList<Box> boxes, Punto p, Colour colour ) {
@@ -52,6 +56,26 @@ public abstract class Figure implements Cloneable {
 		this.colour = colour;
 	}
 	
+	private void init( Engine engine, FiguraBD figura ) {
+		this.numRotations = figura.getRotaciones();
+		
+		List<Point2D.Double> puntos = figura.getPuntos();
+		Point2D.Double center = figura.getPunto();
+		 
+		double offsetX = figura.getOffsetx() * Box.SIZE;
+		center.x = (center.x * Box.SIZE) + offsetX;
+		center.y *= Box.SIZE;
+		
+		Figure figure = this;
+		puntos.forEach( punto -> {
+			punto.x = offsetX + (punto.x * Box.SIZE);
+			punto.y *= Box.SIZE;
+			this.listBoxes.add( new Box(engine,figure,punto.x,punto.y ) );
+		});
+		
+		this.center.setLocation( center.x, center.y );
+	}
+
 	public ArrayList<Box> getListBoxes() {
 		return listBoxes.stream().map( b -> (Box)b.clone() ).collect( Collectors.toCollection(ArrayList::new));
 	}
@@ -111,8 +135,8 @@ public abstract class Figure implements Cloneable {
 	public Figure clone() {
 		try {
 			return this.getClass()
-					.getDeclaredConstructor( new Class[] { int.class, ArrayList.class, Punto.class, Colour.class } )
-					.newInstance( this.rotation, getListBoxes(), (Punto)center.clone(), this.colour );
+					.getDeclaredConstructor( new Class[] { int.class, int.class, ArrayList.class, Punto.class, Colour.class } )
+					.newInstance( this.numRotations, this.rotation, getListBoxes(), (Punto)center.clone(), this.colour );
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

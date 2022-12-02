@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import jtetris.api.model.Board;
 import jtetris.api.rabbitmq.SendToQueueSocketIO;
+import jtetris.app.service.FiguraService;
 import jtetris.figure.Box;
 import jtetris.figure.Figure;
 import jtetris.figure.FigureFactory;
@@ -42,7 +43,10 @@ public class Engine implements Runnable {
 	//private SendToQueue sendToQueue;
 	
 	@Autowired
-	private ComputeHash funcionHash;	
+	private ComputeHash funcionHash;
+
+	@Autowired
+	public FiguraService figuraService;
 
 	public boolean figureFell = false;
 

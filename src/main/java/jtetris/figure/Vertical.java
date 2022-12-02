@@ -2,6 +2,7 @@ package jtetris.figure;
 
 import java.util.ArrayList;
 
+import jtetris.app.model.FiguraBD;
 import jtetris.engine.Engine;
 
 /**
@@ -10,20 +11,12 @@ import jtetris.engine.Engine;
  */
 public class Vertical extends Figure {
 	
-	public Vertical( Engine engine, Colour colour ) {
-		super(2,colour);
-		init(engine);
-	}
-	Vertical( int rotation, ArrayList<Box> boxes, Punto p, Colour colour ) {
-		super(2,rotation,boxes,p,colour);
+	public Vertical( Engine engine, Colour colour, FiguraBD figura ) {
+		super(colour,engine,figura);
 	}
 
-	private void init( Engine engine ) {
-		double centerX = 3*Box.SIZE;
-		super.listBoxes.add( new Box(engine,this,centerX,0) );
-		super.listBoxes.add( new Box(engine,this,centerX+Box.SIZE,0) );
-		super.listBoxes.add( new Box(engine,this,centerX+2*Box.SIZE,0) );
-		super.listBoxes.add( new Box(engine,this,centerX+3*Box.SIZE,0) );
-		super.center.setLocation( centerX+Box.SIZE, 0 );
+	Vertical( int numRotations, int rotation, ArrayList<Box> boxes, Punto p, Colour colour ) {
+		super(numRotations,rotation,boxes,p,colour);
 	}
+
 }

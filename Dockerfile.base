@@ -17,6 +17,9 @@ RUN apt-get install -y maven
 # Install rabbitmq
 RUN apt-get install -y rabbitmq-server
 
+# Install postgresql
+RUN apt-get install -y postgresql postgresql-contrib
+
 # Install curl
 RUN apt-get install -y curl
 

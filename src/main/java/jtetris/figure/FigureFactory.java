@@ -1,8 +1,12 @@
 package jtetris.figure;
 
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
+import jtetris.app.model.FiguraBD;
 import jtetris.engine.Engine;
 
 /**
@@ -10,17 +14,30 @@ import jtetris.engine.Engine;
  *
  */
 public class FigureFactory {
-	
+		
 	public enum Shape {
-	    ELE(0), TE(1), VERTICAL(2); 
+	    ELE(0,"Ele",Ele.class), TE(1,"Te",Te.class), VERTICAL(2,"Vertical",Vertical.class); 
 		
 		private final int index;
-		Shape( int i ) {
+		private final String name;
+		private final Class<? extends Figure> clazz;
+		
+		Shape( int i, String name, Class<? extends Figure> clazz ) {
 			this.index = i;
+			this.name = name;
+			this.clazz = clazz;
 		}
 		
 		public int getIndex() {
 			return index;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public Class<? extends Figure> getClazz() {
+			return clazz;
 		}
 	}
 	
@@ -34,12 +51,23 @@ public class FigureFactory {
 
 	private Random random = new Random();
 	private Engine engine;
+	HashMap<String,FiguraBD> map;
 
 	public FigureFactory( Engine engine ) {
 		this.engine = engine;
 	}
 	
+	private void init() {
+		List<FiguraBD> figuras = this.engine.figuraService.findAll();
+		map = new HashMap<String,FiguraBD>();  
+		figuras.forEach( figura -> {
+			map.put( figura.getName(), figura );
+		});
+	}
+
 	public Figure getNextFigure() {
+		if( map == null )
+			init();
 		
 		Figure figure = null;
 		
@@ -48,19 +76,17 @@ public class FigureFactory {
 		
 		Shape[] formas = Shape.values();
 		int nextInt = random.nextInt(formas.length);
+
 		Shape next = formas[nextInt];
-		switch (next) {
-		case ELE:
-			figure = new Ele(this.engine,colour);
-			break;
-		case TE:
-			figure = new Te(this.engine,colour);
-			break;
-		case VERTICAL:
-			figure = new Vertical(this.engine,colour);
-			break;			
-		default:
-			break;
+		FiguraBD figura = map.get(next.getName());
+		
+		try {
+			figure = next.getClazz()
+				.getConstructor( Engine.class, Colour.class, FiguraBD.class )
+				.newInstance( this.engine,colour,figura );
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
 		}
 		
 		return figure;
